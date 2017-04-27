@@ -7,7 +7,15 @@
     "require": {
         "php": ">=5.6.4",
         "laravel/lumen-framework": "5.4.*",
-        "vlucas/phpdotenv": "~2.2"
+        "vlucas/phpdotenv": "~2.2",
+        "xu42/cet": "^3.0",
+        "xu42/dlpu-news": "^3.0",
+        "xu42/express-tracking": "^3.0",
+        "xu42/qznjw2014": "^3.0",
+        "xu42/dlpu-network": "^3.0",
+        "xu42/dlpu-ecard": "^3.0",
+        "overtrue/wechat": "^3.3",
+        "monolog/monolog": "^1.22"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -31,5 +39,11 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
 }
