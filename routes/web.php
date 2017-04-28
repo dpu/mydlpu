@@ -14,3 +14,5 @@
 $app->get('/', function () use ($app) {
     return $app->version();
 });
+
+$app->post('078f40fa23e0672777adc7c05d4773dd', 'DeployController@deploy');
