@@ -20,7 +20,7 @@ class ExpressListener implements ShouldQueue
 
     public function handle(ExpressEvent $event)
     {
-        LogService::express('获取id', [$event->express->id]);
+        $id = $event->express->id;
         $postId = $event->express->nu;
         $comCodes = [0 => $event->express->com];
         $state = $event->express->state;
@@ -47,7 +47,7 @@ class ExpressListener implements ShouldQueue
                 LogService::express('命中...', [$state, strtotime($data['data'][0]['time']), $time]);
                 $remark = "\n您将实时收到快递最新状态!\n备注：$note" . ' [' . $event->express->com . ']';
                 MessageNoticeService::express($openid, '快递有新动态啦', $postId, $data['data'][0]['context'], $data['data'][0]['time'], $remark, $data['url']);
-                $this->updateToDB($postId, $data['state'], $data['data'][0]['time'], $data['data'][0]['context'], $data['message']);
+                $this->updateToDB($id, $data['state'], $data['data'][0]['time'], $data['data'][0]['context'], $data['message']);
             }
 
             $state = $data['state'];
@@ -59,9 +59,9 @@ class ExpressListener implements ShouldQueue
     }
 
 
-    private function updateToDB($nu, $state, $time, $context, $message)
+    private function updateToDB($id, $state, $time, $context, $message)
     {
-        $modelExpress = \App\Models\Express::where('nu', $nu)->first();
+        $modelExpress = \App\Models\Express::where('id', $id)->first();
         $modelExpress->state = $state;
         $modelExpress->context = $context;
         $modelExpress->time = $time;
