@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Express;
 use App\Http\Controllers\Controller;
 use App\Services\Express\ExpressService;
 use Illuminate\Http\Request;
+use Overtrue\Socialite\AuthorizeFailedException;
 
 class ExpressController extends Controller
 {
     public function indexHtml()
     {
         $app = app('wechat');
-        $user = $app->oauth->user();
-        $openid = $user->id;
+
+        try {
+            $openid = $app->oauth->user()->id;
+        } catch (AuthorizeFailedException $e) {
+            die(config('paper.default.only_wechat_browser'));
+        }
 
         return view('express.index')->with('openid', $openid);
     }

@@ -2,7 +2,7 @@
 
 return [
     'default' => [
-
+        'only_wechat_browser' => '请从微信客户端访问',
     ],
     'cet' => [
         'error' => [

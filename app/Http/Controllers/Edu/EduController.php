@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Edu;
 use App\Http\Controllers\Controller;
 use App\Services\Edu\EduService;
 use Illuminate\Http\Request;
+use Overtrue\Socialite\AuthorizeFailedException;
 
 class EduController extends Controller
 {
     public function bindingHtml()
     {
         $app = app('wechat');
-        $user = $app->oauth->user();
-        $openid = $user->id;
+
+        try {
+            $openid = $app->oauth->user()->id;
+        } catch (AuthorizeFailedException $e) {
+            die(config('paper.default.only_wechat_browser'));
+        }
 
         return view('edu.binding.index')->with('openid', $openid);
     }
@@ -32,8 +37,12 @@ class EduController extends Controller
     public function removeBindingHtml()
     {
         $app = app('wechat');
-        $user = $app->oauth->user();
-        $openid = $user->id;
+
+        try {
+            $openid = $app->oauth->user()->id;
+        } catch (AuthorizeFailedException $e) {
+            die(config('paper.default.only_wechat_browser'));
+        }
 
         $data = (new EduService)->removeBinding($openid);
 
