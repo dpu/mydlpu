@@ -15,6 +15,8 @@ return [
             'already' => '已经绑定, 如需重新绑定请先解绑',
             'success' => '绑定成功',
             'error' => '服务故障, 绑定失败',
+            'have_no' => '尚未绑定',
+            'remove_success' => '解绑成功',
         ],
     ],
 ];

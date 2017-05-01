@@ -16,7 +16,7 @@
         <div class="hd">
             <h1 class="page_title">教务系统绑定</h1>
         </div>
-        <form action="/h5/edu/binding/result" method="post">
+        <form action={{route('eduBindingResult')}} method="post">
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">学号</label></div>
@@ -34,7 +34,7 @@
                     <div class="weui-cell__hd"><label class="weui-label">手机</label></div>
                     <div class="weui-cell__bd">
                         <input class="weui-input" type="tel" name="mobile" pattern="[0-9]*" placeholder="请输入手机号" required>
-                        <input type="hidden" name="openid" value="{{$_GET['openid']}}">
+                        <input type="hidden" name="openid" value="{{$openid}}">
                     </div>
                 </div>
             </div>

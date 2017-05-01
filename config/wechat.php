@@ -42,6 +42,11 @@ return [
         'level' => 'debug',
         'file'  => storage_path('logs/wechat.log'),
     ],
+    'url' => [
+        'prefix' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx75ecd24309ff9760&redirect_uri=',
+        'suffix_base' => '&response_type=code&scope=snsapi_base&state=1#wechat_redirect',
+        'suffix_userinfo' => '&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect',
+    ],
 
     /*
      * OAuth 配置

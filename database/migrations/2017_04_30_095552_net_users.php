@@ -21,6 +21,7 @@ class NetUsers extends Migration
             $table->string('password')->comment('密码');
             $table->string('mobile')->nullable()->comment('手机号');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

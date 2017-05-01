@@ -16,7 +16,7 @@
         <div class="hd">
             <h1 class="page_title">快递追踪</h1>
         </div>
-        <form action="/h5/express/result" method="post">
+        <form action={{route('expressResult')}} method="post">
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">单号</label></div>

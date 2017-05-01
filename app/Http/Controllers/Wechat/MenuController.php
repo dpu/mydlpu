@@ -100,7 +100,7 @@ class MenuController extends Controller
                     [
                         "type" => "view",
                         "name" => "快递追踪",
-                        "url"  => "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx75ecd24309ff9760&redirect_uri=http%3a%2f%2fngrok.mydlpu.xu42.cn%2fh5%2fexpress&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
+                        "url"  => config('wechat.url.prefix').urlencode(route('express')).config('wechat.url.suffix_base'),
                     ],
 [
     "type" => "click",
@@ -129,5 +129,13 @@ class MenuController extends Controller
         $menu   = $app->menu;
         $result = $menu->add($buttons);
         var_dump($result);
+    }
+
+    public function get()
+    {
+        $app = app('wechat');
+        $menu   = $app->menu;
+        $result = $menu->all();
+        print_r($result);
     }
 }
