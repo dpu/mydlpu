@@ -36,6 +36,6 @@ class CetController extends Controller
             'onMenuShareAppMessage',
             'onMenuShareQQ',
             'onMenuShareQZone'
-        ], true);
+        ], false);
     }
 }

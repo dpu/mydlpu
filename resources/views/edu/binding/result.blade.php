@@ -26,11 +26,6 @@
                 </div>
             </div>
         </center>
-
-        <div class="qrcode">
-            <img src="//dn-xuyangjie.qbox.me/footer.png">
-        </div>
-
     </div>
 </div>
 </body>
