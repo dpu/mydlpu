@@ -34,10 +34,16 @@ $app->get('h5/express', 'Express\ExpressController@indexHtml');
 /** 网页 快递查询结果 */
 $app->post('h5/express/result', 'Express\ExpressController@resultHtml');
 
-/** 网页 四六级查询 */
-$app->get('h5/cet/query', 'Wechat\Plugins\CetScore@cetPost');
+/** 网页 教务处学号绑定 */
+$app->get('h5/edu/binding', function () {
+    return view('edu.binding.index');
+});
+
+/** 教务处学号绑定处理 */
+$app->post('h5/edu/binding/result', 'Edu\EduController@binding');
+
 
 $app->get('test', function () {
-    $modelExpress = \App\Models\Express::where('nu', '3101260212281')->first();
-    return $modelExpress;
+    $modelEduUser = \App\Models\EduUsers::where('openid', 'ol_LCw0IAYwE7m3tFKwgvjUKHxa8')->where('username', '1305040229')->first();
+    var_dump($modelEduUser);
 });

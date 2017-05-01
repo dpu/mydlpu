@@ -18,6 +18,11 @@ return [
         'level' => Logger::DEBUG,
         'path' => storage_path('logs/express.log')
     ],
+    'edu' => [
+        'name' => 'edu',
+        'level' => Logger::DEBUG,
+        'path' => storage_path('logs/edu.log')
+    ],
 
 ];
 

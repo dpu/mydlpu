@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Express extends Model
+class NetUsers extends Model
 {
-    protected $table = 'express';
+    protected $table = 'net_users';
 }

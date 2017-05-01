@@ -31,5 +31,13 @@ class LogService extends Service
         $log->info($message, $arr);
     }
 
+    public static function edu($message, $arr)
+    {
+        $log = new Logger(config('monolog.edu.name'));
+        $stream = new StreamHandler(config('monolog.edu.path'), config('monolog.edu.level'));
+        $log->pushHandler($stream);
+        $log->info($message, $arr);
+    }
+
 
 }

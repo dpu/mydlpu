@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Expresses extends Migration
+class Express extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class Expresses extends Migration
      */
     public function up()
     {
-        Schema::create('expresses', function (Blueprint $table) {
+        Schema::create('express', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('openid')->comment('openid');
@@ -37,6 +37,6 @@ class Expresses extends Migration
      */
     public function down()
     {
-        Schema::drop('expresses');
+        Schema::drop('express');
     }
 }
