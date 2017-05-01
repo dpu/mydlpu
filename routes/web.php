@@ -49,4 +49,4 @@ $app->get('h5/edu/binding/remove', ['as' => 'eduBindingRemove', 'uses' => 'Edu\E
 $app->get('h5/cet', ['as' => 'cet', 'uses' => 'Cet\CetController@indexHtml']);
 
 /** 网页 四六级成绩查询结果 */
-$app->post('h5/cet/result', ['as' => 'cetResult', 'uses' => 'Cet\CetController@resultHtml']);
+$app->get('h5/cet/result', ['as' => 'cetResult', 'uses' => 'Cet\CetController@resultHtml']);

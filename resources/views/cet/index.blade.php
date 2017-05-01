@@ -16,7 +16,7 @@
         <div class="hd">
             <h1 class="page_title">CET4&6</h1>
         </div>
-        <form action="{{route('cetResult')}}" method="post">
+        <form action="{{route('cetResult')}}" method="get">
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>

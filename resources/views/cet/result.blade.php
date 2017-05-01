@@ -27,7 +27,6 @@
                     <p class="icon-box__desc">听力：{{ $score['written']['listening'] }}</p>
                     <p class="icon-box__desc">阅读：{{ $score['written']['reading'] }}</p>
                     <p class="icon-box__desc">写作和翻译：{{ $score['written']['translation'] }}</p>
-                    <p class="icon-box__desc">请关闭页面 enjoy更多服务</p>
                 </div>
             </div>
             @elseif(!is_null($score) && $score['written']['score'] < 425)
@@ -51,6 +50,9 @@
                 </div>
             </div>
             @endif
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="{{route('cet')}}" type="button">继续查成绩</a>
+            </div>
         </center>
 
         <div class="qrcode">
@@ -63,7 +65,7 @@
     shareData = {
         title: "{{ $score['name'] }}的英语四六级成绩单",
         desc: "简约\n\t\t快捷\n\t\t\t\t高效",
-        link: "{{route('cet')}}",
+        link: location.href.split('#')[0],
         imgUrl: "{{url('assets/img/icon.png')}}"
     };
     wx.config({!! $jsconfig !!});
