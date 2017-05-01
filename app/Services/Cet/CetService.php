@@ -40,7 +40,7 @@ class CetService extends Service
         MessageNoticeService::cet($openid, $DTO->name, $DTO->school, $number[1], $detail, $remark);
     }
 
-    private function query($name, $number):CetScoresDTO
+    public function query($name, $number):CetScoresDTO
     {
         $cetScores = (new \Cn\Xu42\Cet\Service\CetService)->query($name, $number);
 

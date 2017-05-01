@@ -32,15 +32,10 @@ class MenuController extends Controller
                         "name" => "等级成绩",
                         "key"  => "B0_SCORE_LEVEL"
                     ],
-//                    [
-//                        "type" => "click",
-//                        "name" => "四级成绩",
-//                        "key"  => "B0_SCORE_CET"
-//                    ],
                     [
                         "type" => "view",
                         "name" => "四级成绩",
-                        "url"  => url('query/cet')
+                        "url"  =>  config('wechat.url.prefix').urlencode(route('cet')).config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "click",
