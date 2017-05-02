@@ -90,9 +90,9 @@ class EduController extends Controller
             $week = $request->input('week', '');
             $token = $eduService->getToken($username, $password);
             $timetable = @$eduService->getTimetable($token, $semester, $week);
-            return response()->json($timetable)->setCallback($request->input('callback'));
+            return response()->json($timetable, 200, [], JSON_FORCE_OBJECT)->setCallback($request->input('callback'));
         } catch (\Throwable $t) {
-            return response()->json(['errmsg' => $t->getMessage()])->setCallback($request->input('callback'));
+            return response()->json(['errmsg' => $t->getMessage()], 404)->setCallback($request->input('callback'));
         }
     }
 
