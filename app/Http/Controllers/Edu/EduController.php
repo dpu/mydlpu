@@ -18,7 +18,7 @@ class EduController extends Controller
         try {
             $openid = $app->oauth->user()->id;
         } catch (AuthorizeFailedException $e) {
-            return view('error.only_wechat_browser');
+            return redirect(config('wechat.url.prefix') . urlencode(route('eduBinding')) . config('wechat.url.suffix_base'));
         }
 
         return view('edu.binding.index')->with('openid', $openid);
@@ -43,7 +43,7 @@ class EduController extends Controller
         try {
             $openid = $app->oauth->user()->id;
         } catch (AuthorizeFailedException $e) {
-            return view('error.only_wechat_browser');
+            return redirect(config('wechat.url.prefix') . urlencode(route('eduBindingRemove')) . config('wechat.url.suffix_base'));
         }
 
         $data = (new EduService)->removeBinding($openid);

@@ -16,7 +16,7 @@ class ExpressController extends Controller
         try {
             $openid = $app->oauth->user()->id;
         } catch (AuthorizeFailedException $e) {
-            return view('error.only_wechat_browser');
+            return redirect(config('wechat.url.prefix') . urlencode(route('express')) . config('wechat.url.suffix_base'));
         }
 
         return view('express.index')->with('openid', $openid);
