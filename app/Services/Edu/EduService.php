@@ -54,9 +54,19 @@ class EduService
         return (new AccountService)->getToken($username, $password);
     }
 
-    public function getCoursesScores($token, $kksj = '')
+    public function getCoursesScores($token, $semester = '')
     {
-        return (new EducationService)->getCoursesScores($token, $kksj);
+        return (new EducationService)->getCoursesScores($token, $semester);
+    }
+
+    public function getTimetable($token, $semester, $week = '')
+    {
+        return (new EducationService)->getTimetable($token, $semester, $week);
+    }
+
+    public function getCurrentWeek()
+    {
+        return (new EducationService)->getCurrentWeek();
     }
 
     public function getLevelScores($token)

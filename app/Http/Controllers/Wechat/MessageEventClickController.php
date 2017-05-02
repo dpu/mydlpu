@@ -16,8 +16,11 @@ class MessageEventClickController extends Controller
             case config('wechat.button.score_level'):
                 return $this->scoreLevel($message, $app);
                 break;
+            case config('wechat.button.timetable'):
+                return $this->timetable($message, $app);
+                break;
             default :
-                return null;
+                return 'ing';
                 break;
         }
 
@@ -27,6 +30,7 @@ class MessageEventClickController extends Controller
     private function scoreLevel($message, $app)
     {
         $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
         $eduService = new EduService();
         try {
             $modelUser = $eduService->rowByOpenid($openid);
@@ -35,6 +39,26 @@ class MessageEventClickController extends Controller
             $news = (new MessageNewsService)->scoreLevel($scoresLevel);
         } catch (\Throwable $t) {
             LogService::edu('Edu scoreLevel error...', [$openid, $t->getMessage(), $t->getTrace()]);
+            $news = MessageTextService::simple($t->getMessage());
+        }
+
+        $app->staff->message($news)->to($openid)->send();
+    }
+
+    private function timetable($message, $app)
+    {
+        $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
+        $eduService = new EduService();
+        try {
+            $modelUser = $eduService->rowByOpenid($openid);
+            $token = $eduService->getToken($modelUser->username, $modelUser->password);
+            $semester = config('edu.semester');
+            $week = $eduService->getCurrentWeek();
+            $timetable = @$eduService->getTimetable($token, $semester, $week);
+            $news = (new MessageNewsService)->timetable($timetable);
+        } catch (\Throwable $t) {
+            LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
         }
 

@@ -39,7 +39,7 @@ class MenuController extends Controller
                     ],
                     [
                         "type" => "click",
-                        "name" => "今明课表",
+                        "name" => "今天课表",
                         "key" => config('wechat.button.timetable'),
                     ],
                 ]
