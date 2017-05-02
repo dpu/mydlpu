@@ -23,9 +23,9 @@ class MenuController extends Controller
                         "key"  => "B0_TIMETABLE"
                     ],
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "期末成绩",
-                        "key"  => "B0_SCORE_FINAL"
+                        "url"  => config('wechat.url.prefix').urlencode(route('scoresCourses')).config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "click",

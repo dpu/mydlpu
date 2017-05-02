@@ -100,5 +100,6 @@ $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
 
 $app->configure('paper');
 $app->configure('monolog');
+$app->configure('edu');
 
 return $app;

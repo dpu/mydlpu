@@ -4,13 +4,14 @@ namespace App\Services\Edu;
 
 use App\Services\LogService;
 use Cn\Xu42\Qznjw2014\Account\Service\AccountService;
+use Cn\Xu42\Qznjw2014\Education\Service\EducationService;
 
 class EduService
 {
 
     public function binding($openid, $username, $password, $mobile = '')
     {
-        if ($this->isBinding($openid)) {
+        if ($this->rowByOpenid($openid)) {
             return ['icon' => 'info', 'desc' => config('paper.edu.binding.already')];
         }
 
@@ -33,7 +34,7 @@ class EduService
 
     public function removeBinding($openid)
     {
-        if ($this->isBinding($openid)) {
+        if ($this->rowByOpenid($openid)) {
             $removeRes = $this->removeFromDB($openid);
             LogService::edu('Edu removeBinding success...', [$openid]);
             return ['icon' => 'success', 'title' => config('paper.edu.binding.remove_success')];
@@ -43,10 +44,19 @@ class EduService
     }
 
 
-    private function isBinding($openid)
+    public function rowByOpenid($openid)
     {
-        $modelEduUser = \App\Models\EduUsers::where('openid', $openid)->first();
-        return is_null($modelEduUser) ? false : true;
+        return \App\Models\EduUsers::where('openid', $openid)->first();
+    }
+
+    public function getToken($username, $password)
+    {
+        return (new AccountService)->getToken($username, $password);
+    }
+
+    public function getCoursesScores($token, $kksj = '')
+    {
+        return (new EducationService)->getCoursesScores($token, $kksj);
     }
 
     private function recordToDB($openid, $username, $password, $mobile)

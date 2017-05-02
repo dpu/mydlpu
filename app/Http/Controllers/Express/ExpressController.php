@@ -16,7 +16,7 @@ class ExpressController extends Controller
         try {
             $openid = $app->oauth->user()->id;
         } catch (AuthorizeFailedException $e) {
-            die(config('paper.default.only_wechat_browser'));
+            return view('error.only_wechat_browser');
         }
 
         return view('express.index')->with('openid', $openid);
