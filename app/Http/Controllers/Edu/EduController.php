@@ -79,4 +79,21 @@ class EduController extends Controller
         return view('edu.scores.courses')->with('data', $data)->with('jsconfig', Config::wechatShareConfig());
     }
 
+    public function apiMinaTimetable(Request $request)
+    {
+        try {
+            $eduService = new EduService();
+
+            $username = $request->input('stuid');
+            $password = $request->input('stupwd');
+            $semester = $request->input('semester', config('edu.semester'));
+            $week = $request->input('week', '');
+            $token = $eduService->getToken($username, $password);
+            $timetable = @$eduService->getTimetable($token, $semester, $week);
+            return response()->json($timetable)->setCallback($request->input('callback'));
+        } catch (\Throwable $t) {
+            return response()->json(['errmsg' => $t->getMessage()])->setCallback($request->input('callback'));
+        }
+    }
+
 }

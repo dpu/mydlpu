@@ -53,3 +53,6 @@ $app->get('h5/cet/result', ['as' => 'cetResult', 'uses' => 'Cet\CetController@re
 
 /** 网页 期末成绩 */
 $app->get('h5/scores/courses', ['as' => 'scoresCourses', 'uses' => 'Edu\EduController@scoresCoursesHtml']);
+
+$app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Edu\EduController@apiMinaTimetable']);
+

@@ -113,7 +113,7 @@ class MenuController extends Controller
 
         $menu = $app->menu;
         $result = $menu->add($buttons);
-        var_dump($result);
+        echo $result->errmsg;
     }
 
     public function get()
