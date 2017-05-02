@@ -19,7 +19,7 @@ class MessageEventController extends Controller
                 return MessageEventScanController::handle($message);
                 break;
             case 'CLICK':
-                return MessageEventClickController::handle($message);
+                return (new MessageEventClickController)->handle($message, $app);
                 break;
             case 'LOCATION':
                 return null;

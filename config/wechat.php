@@ -47,6 +47,14 @@ return [
         'suffix_base' => '&response_type=code&scope=snsapi_base&state=1#wechat_redirect',
         'suffix_userinfo' => '&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect',
     ],
+    'button' =>[
+        'timetable' => 'TIMETABLE', //课表(目前只做今明两天的课表, 更多课表从小程序获取)
+        'score_level' => 'SCORE_LEVEL', //等级成绩
+        'exams' => 'EXAMS', //考试安排
+        'news' => 'NEWS', //新闻动态
+        'feedback' => 'FEEDBACK', //反馈
+        'about' => 'ABOUT' //关于
+    ],
 
     /*
      * OAuth 配置

@@ -59,6 +59,10 @@ class EduService
         return (new EducationService)->getCoursesScores($token, $kksj);
     }
 
+    public function getLevelScores($token)
+    {
+        return (new EducationService)->getLevelScores($token);
+    }
     private function recordToDB($openid, $username, $password, $mobile)
     {
         $modelEduUser = new \App\Models\EduUsers;
