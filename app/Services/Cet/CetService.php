@@ -14,21 +14,30 @@ class CetService extends Service
     {
         $app->staff->message(MessageTextService::ing())->to($openid)->send();
 
-        $pregRes1 = preg_match('/([\x{4e00}-\x{9fa5}]+)/u', $content, $name);
-        $pregRes2 = preg_match('/(\d+)/', $content, $number);
+        $from = 'command';
+        $pregRes1 = preg_match('/([\x{4e00}-\x{9fa5}]+)/u', $content, $matchesName);
+        $pregRes2 = preg_match('/(\d+)/', $content, $matchesNumber);
 
+        $name = $matchesName[1];
+        $number = $matchesNumber[1];
         if ($pregRes1 !== 1 || $pregRes2 !== 1) {
             $app->staff->message(MessageTextService::errorCetArgument())->to($openid)->send();
             return;
         }
 
-        LogService::cet('CET query Start ...', [$openid, $name[1], $number[1]]);
+        LogService::cet('CET query Start ...', [$openid, $name, $number]);
         try {
-            $DTO = $this->query($name[1], $number[1]);
-            LogService::cet('CET query Success...', [$openid, $name[1], $number[1], json_encode($DTO)]);
+            if (!is_null($cetScoresDB = $this->rowFromDB($name, $number))) {
+                $DTO = $this->arrayToDTO(json_decode($cetScoresDB->context, true));
+            } else {
+                $cetScores = $this->query($name, $number);
+                $DTO = $this->arrayToDTO($cetScores);
+                $this->recordToDB($name, $number, $cetScores, $from);
+            }
+            LogService::cet('CET query Success...', [$openid, $name, $number, json_encode($DTO)]);
         } catch (\Throwable $throwable) {
             $text = $throwable->getMessage() ? $throwable->getMessage() : config('paper.cet.error.system');
-            LogService::cet('CET query Error...', [$openid, $name[1], $number[1], $throwable->getMessage(), $throwable->getTrace()]);
+            LogService::cet('CET query Error...', [$openid, $name, $number, $throwable->getMessage(), $throwable->getTrace()]);
             $app->staff->message(MessageTextService::simple($text))->to($openid)->send();
             return;
         }
@@ -37,13 +46,11 @@ class CetService extends Service
             $DTO->written->score, $DTO->written->listening, $DTO->written->reading, $DTO->written->translation, $DTO->oral->score);
         $remark = ($DTO->written->score >= 425 || $DTO->oral->score == 'A') ? '恭喜你通过了四六级考试！' : '很遗憾，没有通过四六级考试';
 
-        MessageNoticeService::cet($openid, $DTO->name, $DTO->school, $number[1], $detail, $remark);
+        MessageNoticeService::cet($openid, $DTO->name, $DTO->school, $number, $detail, $remark);
     }
 
-    public function query($name, $number):CetScoresDTO
+    public function arrayToDTO($cetScores)
     {
-        $cetScores = (new \Cn\Xu42\Cet\Service\CetService)->query($name, $number);
-
         $cetScoresDTO = new CetScoresDTO;
         $cetScoresDTO->name = $cetScores['name'] ?? '';
         $cetScoresDTO->school = $cetScores['school'] ?? '';
@@ -59,5 +66,27 @@ class CetService extends Service
         $cetScoresDTO->oral->score = $cetScores['oral']['score'] ?? '';
 
         return $cetScoresDTO;
+    }
+
+    public function query($name, $number)
+    {
+        return (new \Cn\Xu42\Cet\Service\CetService)->query($name, $number);
+    }
+
+    public function recordToDB($name, $number, $context, $from, $openid = '')
+    {
+        $modelCet = new \App\Models\Cet;
+        $modelCet->name = $name;
+        $modelCet->number = $number;
+        $modelCet->context = json_encode($context);
+        $modelCet->from = $from;
+        $modelCet->openid = $openid;
+        $modelCet->save();
+        return $modelCet;
+    }
+
+    public function rowFromDB($name, $number)
+    {
+        return \App\Models\Cet::where('name', $name)->where('number', $number)->first();
     }
 }

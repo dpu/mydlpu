@@ -41,7 +41,7 @@ class ExpressListener implements ShouldQueue
 
             if (strtotime($data['data'][0]['time']) <= $time) {
                 LogService::express('睡眠...', [$state, strtotime($data['data'][0]['time']), $time]);
-                sleep(6);
+                sleep(600);
             }
             if (strtotime($data['data'][0]['time']) > $time) {
                 LogService::express('命中...', [$state, strtotime($data['data'][0]['time']), $time]);

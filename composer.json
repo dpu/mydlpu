@@ -15,7 +15,8 @@
         "xu42/express-tracking": "^3.0",
         "xu42/qznjw2014": "^3.0",
         "xu42/dlpu-network": "^3.0",
-        "xu42/dlpu-ecard": "^3.0"
+        "xu42/dlpu-ecard": "^3.0",
+        "predis/predis": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
