@@ -7,7 +7,7 @@
     <meta content="telephone=no" name="format-detection"/>
     <title>四六级成绩查询 - 工大A梦</title>
     <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"/>
-    <link rel="stylesheet" href="/assets/css/main.css"/>
+    <link rel="stylesheet" href="//dn-xuyangjie.qbox.me/mydlpu.main.css"/>
 </head>
 
 <body>
@@ -47,7 +47,7 @@
         title: '英语四六级成绩查询',
         desc: "简约\n\t\t快捷\n\t\t\t\t高效",
         link: "{{route('cet')}}",
-        imgUrl: "{{url('assets/img/icon.png')}}"
+        imgUrl: "https://dn-xuyangjie.qbox.me/icon.png"
     };
     wx.config({!! $jsconfig !!});
     wx.ready(function () {

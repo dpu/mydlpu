@@ -7,7 +7,7 @@
     <meta content="telephone=no" name="format-detection"/>
     <title>快递追踪 - 工大A梦</title>
     <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"/>
-    <link rel="stylesheet" href="/assets/css/main.css"/>
+    <link rel="stylesheet" href="//dn-xuyangjie.qbox.me/mydlpu.main.css"/>
 </head>
 
 <body>
