@@ -62,6 +62,7 @@ $app->get('h5/scores/courses', ['as' => 'scoresCourses', 'uses' => 'Edu\EduContr
 
 $app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Edu\EduController@apiMinaTimetable']);
 $app->get('api/mina/time', ['as' => 'apiMinaCurrentTime', 'uses' => 'Edu\EduController@apiMinaCurrentTime']);
+$app->post('api/mina/feedback', ['as' => 'apiMinaFeedback', 'uses' => 'Edu\EduController@apiMinaFeedback']);
 
 
 $app->get('test', function (){

@@ -108,4 +108,20 @@ class EduController extends Controller
         }
     }
 
+    public function apiMinaFeedback(Request $request)
+    {
+        try {
+            $content = $request->input('content', '');
+            if (!empty($content)) {
+                $modelFeedback = new \App\Models\Feedback;
+                $modelFeedback->content = $content;
+                $modelFeedback->from = 'mina';
+                $modelFeedback->save();
+            }
+            return response()->json([], 200);
+        } catch (\Throwable $t) {
+            return response()->json(['errmsg' => $t->getMessage()], 500);
+        }
+    }
+
 }
