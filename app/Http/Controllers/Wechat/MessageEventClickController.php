@@ -12,6 +12,7 @@ use Cn\Xu42\DlpuEcard\Exception\SystemException;
 use Cn\Xu42\DlpuEcard\Service\DlpuEcardService;
 use Cn\Xu42\DlpuNetwork\Exception\BaseException;
 use Cn\Xu42\DlpuNews\DlpuNews;
+use Cn\Xu42\Qznjw2014\Account\Exception\LoginException;
 use Cn\Xu42\Qznjw2014\Common\Exception\ArgumentException;
 
 class MessageEventClickController extends Controller
@@ -54,6 +55,8 @@ class MessageEventClickController extends Controller
             $news = (new MessageNewsService)->scoreLevel($scoresLevel);
         } catch (ArgumentException $argumentException) {
             $news = MessageTextService::bindingEdu();
+        } catch (LoginException $loginException) {
+            $news = MessageTextService::bindingEdu();
         } catch (\Throwable $t) {
             LogService::edu('Edu scoreLevel error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
@@ -75,6 +78,8 @@ class MessageEventClickController extends Controller
             $timetable = @$eduService->getTimetable($token, $semester, $week);
             $news = (new MessageNewsService)->timetable($timetable);
         } catch (ArgumentException $argumentException) {
+            $news = MessageTextService::bindingEdu();
+        } catch (LoginException $loginException) {
             $news = MessageTextService::bindingEdu();
         } catch (\Throwable $t) {
             LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);

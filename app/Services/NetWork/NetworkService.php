@@ -29,9 +29,7 @@ class NetworkService
 
     public function binding($openid, $username, $password, $mobile = '')
     {
-        if ($this->rowByOpenid($openid)) {
-            return ['icon' => 'info', 'desc' => config('paper.edu.binding.already')];
-        }
+        $this->removeFromDB($openid);
 
         try {
             $this->getByProxy($username, $password);
@@ -63,7 +61,7 @@ class NetworkService
     private function recordToDB($openid, $username, $password, $mobile)
     {
         $this->removeFromDB($openid);
-        $modelEduUser = new \App\Models\EduUsers;
+        $modelEduUser = new \App\Models\NetUsers;
         $modelEduUser->openid = $openid;
         $modelEduUser->username = $username;
         $modelEduUser->password = $password;
@@ -74,7 +72,7 @@ class NetworkService
 
     private function removeFromDB($openid)
     {
-        $modelEduUser = \App\Models\EduUsers::where('openid', $openid)->delete();
+        $modelEduUser = \App\Models\NetUsers::where('openid', $openid)->delete();
         return is_null($modelEduUser) ? false : true;
     }
 }

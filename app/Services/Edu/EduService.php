@@ -11,9 +11,7 @@ class EduService
 
     public function binding($openid, $username, $password, $mobile = '')
     {
-        if ($this->rowByOpenid($openid)) {
-            return ['icon' => 'info', 'desc' => config('paper.edu.binding.already')];
-        }
+        $this->removeFromDB($openid);
 
         try {
             $token = (new AccountService)->getToken($username, $password);
