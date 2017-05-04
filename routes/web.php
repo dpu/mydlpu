@@ -45,6 +45,12 @@ $app->post('h5/edu/binding/result', ['as' => 'eduBindingResult', 'uses' => 'Edu\
 /** 教务处学号解除绑定 */
 $app->get('h5/edu/binding/remove', ['as' => 'eduBindingRemove', 'uses' => 'Edu\EduController@removeBindingHtml']);
 
+/** 网页 锐捷自助绑定 */
+$app->get('h5/net/binding', ['as' => 'netBinding', 'uses' => 'Net\NetController@bindingHtml']);
+
+/** 锐捷自助绑定处理 */
+$app->post('h5/net/binding/result', ['as' => 'netBindingResult', 'uses' => 'Net\NetController@bindingResultHtml']);
+
 /** 网页 四六级成绩查询 */
 $app->get('h5/cet', ['as' => 'cet', 'uses' => 'Cet\CetController@indexHtml']);
 

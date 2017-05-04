@@ -22,24 +22,14 @@ class MessageTextService extends Service
         return new Text(['content' =>  config('paper.cet.error.argument')]);
     }
 
-
-    public static function registerNetwork($message)
+    public static function bindingEdu()
     {
-        $text = new \EasyWeChat\Message\Text;
-        $text->content = "=== 未绑定校园网自助 ===\n\n回复: 网络 学号 密码\n例: 网络 1305040301 passwd\n注：不要忘记是有空格的～";
-        return $text;
+        return new Text(['content' =>  '请先绑定教务系统 <a href="' . config('edu.url.binding_edu') . '">点此绑定</a>']);
     }
 
-    public static function networkConfig($content)
+    public static function bindingNet()
     {
-        $text = new \EasyWeChat\Message\Text;
-        $text->content = "=== 校园网配置信息 ===\n\nIP：$content[0]\nMAC：$content[1]\n接入点：$content[3]\n类型：$content[4]\n";
-        return $text;
-    }
-
-    public static function binding()
-    {
-        return new Text(['content' =>  '请先绑定教务系统 <a href="' . config('edu.url.binding') . '">点此绑定</a>']);
+        return new Text(['content' =>  '请先绑定网络自助 <a href="' . config('edu.url.binding_net') . '">点此绑定</a>']);
     }
 
 }

@@ -10,6 +10,7 @@ use App\Services\Wechat\MessageNewsService;
 use App\Services\Wechat\MessageTextService;
 use Cn\Xu42\DlpuEcard\Exception\SystemException;
 use Cn\Xu42\DlpuEcard\Service\DlpuEcardService;
+use Cn\Xu42\DlpuNetwork\Exception\BaseException;
 use Cn\Xu42\DlpuNews\DlpuNews;
 use Cn\Xu42\Qznjw2014\Common\Exception\ArgumentException;
 
@@ -52,7 +53,7 @@ class MessageEventClickController extends Controller
             $scoresLevel = $eduService->getLevelScores($token);
             $news = (new MessageNewsService)->scoreLevel($scoresLevel);
         } catch (ArgumentException $argumentException) {
-            $news = MessageTextService::binding();
+            $news = MessageTextService::bindingEdu();
         } catch (\Throwable $t) {
             LogService::edu('Edu scoreLevel error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
@@ -74,7 +75,7 @@ class MessageEventClickController extends Controller
             $timetable = @$eduService->getTimetable($token, $semester, $week);
             $news = (new MessageNewsService)->timetable($timetable);
         } catch (ArgumentException $argumentException) {
-            $news = MessageTextService::binding();
+            $news = MessageTextService::bindingEdu();
         } catch (\Throwable $t) {
             LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
@@ -116,7 +117,7 @@ class MessageEventClickController extends Controller
             $consumption = (new DlpuEcardService)->getConsumption($modelUser->username);
             $news = (new MessageNewsService)->eCard($balance, $consumption);
         } catch (SystemException $systemException) {
-            $news = MessageTextService::binding();
+            $news = MessageTextService::bindingEdu();
         } catch (\Throwable $t) {
             LogService::edu('eCard error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
@@ -134,6 +135,8 @@ class MessageEventClickController extends Controller
             $moderUser = $networkService->rowByOpenid($openid);
             $network = $networkService->getByProxy($moderUser->username, $moderUser->password);
             $news = (new MessageNewsService)->network($network);
+        } catch (BaseException $baseException) {
+            $news = MessageTextService::bindingNet();
         } catch (\Throwable $t) {
             LogService::edu('network error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
