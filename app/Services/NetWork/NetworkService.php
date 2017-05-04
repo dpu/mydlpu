@@ -62,6 +62,7 @@ class NetworkService
 
     private function recordToDB($openid, $username, $password, $mobile)
     {
+        $this->removeFromDB($openid);
         $modelEduUser = new \App\Models\EduUsers;
         $modelEduUser->openid = $openid;
         $modelEduUser->username = $username;
