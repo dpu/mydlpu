@@ -19,7 +19,7 @@ class MenuController extends Controller
                 "sub_button" => [
                     [
                         "type" => "click",
-                        "name" => "新闻动态",
+                        "name" => "教务新闻",
                         "key" => config('wechat.button.news'),
                     ],
                     [

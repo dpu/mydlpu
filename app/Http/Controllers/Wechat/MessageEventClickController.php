@@ -7,6 +7,8 @@ use App\Services\Edu\EduService;
 use App\Services\LogService;
 use App\Services\Wechat\MessageNewsService;
 use App\Services\Wechat\MessageTextService;
+use Cn\Xu42\DlpuNews\DlpuNews;
+use function PHPSTORM_META\type;
 
 class MessageEventClickController extends Controller
 {
@@ -18,6 +20,9 @@ class MessageEventClickController extends Controller
                 break;
             case config('wechat.button.timetable'):
                 return $this->timetable($message, $app);
+                break;
+            case config('wechat.button.news'):
+                return $this->news($message, $app);
                 break;
             default :
                 return 'ing';
@@ -63,6 +68,28 @@ class MessageEventClickController extends Controller
         }
 
         $app->staff->message($news)->to($openid)->send();
+    }
+
+    private function news($message, $app)
+    {
+        $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
+        $newsService = new DlpuNews();
+        try {
+            $currentEvents = $newsService->currentEvents();
+            $news = (new MessageNewsService)->news($currentEvents, config('edu.current_events'));
+            $app->staff->message($news)->to($openid)->send();
+            $notice = $newsService->notice();
+            $news = (new MessageNewsService)->news($notice, config('edu.notice'));
+            $app->staff->message($news)->to($openid)->send();
+            $teachingFiles = $newsService->teachingFiles();
+            $news = (new MessageNewsService)->news($teachingFiles, config('edu.teaching_files'));
+            $app->staff->message($news)->to($openid)->send();
+        } catch (\Throwable $t) {
+            LogService::edu('news currentEvents error...', [$openid, $t->getMessage(), $t->getTrace()]);
+            $news = MessageTextService::simple($t->getMessage());
+            $app->staff->message($news)->to($openid)->send();
+        }
     }
 
 }

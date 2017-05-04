@@ -55,4 +55,28 @@ class MessageNewsService extends Service
 
         return $news;
     }
+
+    public function news($sourceNews, $newsType)
+    {
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '教务处 » 新闻中心 » ' . $newsType
+        ]);
+
+        if (!is_array($sourceNews) || count($sourceNews) === 0) {
+            $news[] = new \EasyWeChat\Message\News([
+                'title' => "啊啊～没有获取到" . $newsType
+            ]);
+            return $news;
+        }
+
+        $sourceNews = array_slice($sourceNews, 0, 5);
+        foreach ($sourceNews as $sourceNew) {
+            $news[] = new \EasyWeChat\Message\News([
+                'title' => $sourceNew['title'] . '[' . $sourceNew['time'] . ']',
+                'url' => $sourceNew['url'],
+            ]);
+        }
+
+        return $news;
+    }
 }
