@@ -21,7 +21,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">账号</label></div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" name="username" pattern="[0-9]*" placeholder="请输入账号" required>
+                        <input class="weui-input" type="text" name="username" pattern="[0-9]*" placeholder="请输入账号" required>
                     </div>
                 </div>
                 <div class="weui-cell">
