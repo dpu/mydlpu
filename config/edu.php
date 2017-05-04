@@ -7,9 +7,4 @@ return [
     'current_events' => '新闻动态',
     'notice' => '通知公告',
     'teaching_files' => '教务文件',
-    'url' => [
-        'binding_edu' => config('wechat.url.prefix').urlencode(route('eduBinding')).config('wechat.url.suffix_base'),
-        'binding_net' => config('wechat.url.prefix').urlencode(route('netBinding')).config('wechat.url.suffix_base'),
-        'remove_binding' => config('wechat.url.prefix').urlencode(route('eduBindingRemove')).config('wechat.url.suffix_base'),
-    ],
 ];
