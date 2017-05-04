@@ -7,8 +7,10 @@ use App\Services\Edu\EduService;
 use App\Services\LogService;
 use App\Services\Wechat\MessageNewsService;
 use App\Services\Wechat\MessageTextService;
+use Cn\Xu42\DlpuEcard\Exception\SystemException;
+use Cn\Xu42\DlpuEcard\Service\DlpuEcardService;
 use Cn\Xu42\DlpuNews\DlpuNews;
-use function PHPSTORM_META\type;
+use Cn\Xu42\Qznjw2014\Common\Exception\ArgumentException;
 
 class MessageEventClickController extends Controller
 {
@@ -23,6 +25,9 @@ class MessageEventClickController extends Controller
                 break;
             case config('wechat.button.news'):
                 return $this->news($message, $app);
+                break;
+            case config('wechat.button.ecard'):
+                return $this->eCard($message, $app);
                 break;
             default :
                 return 'ing';
@@ -42,6 +47,8 @@ class MessageEventClickController extends Controller
             $token = $eduService->getToken($modelUser->username, $modelUser->password);
             $scoresLevel = $eduService->getLevelScores($token);
             $news = (new MessageNewsService)->scoreLevel($scoresLevel);
+        } catch (ArgumentException $argumentException) {
+            $news = MessageTextService::binding();
         } catch (\Throwable $t) {
             LogService::edu('Edu scoreLevel error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
@@ -62,6 +69,8 @@ class MessageEventClickController extends Controller
             $week = $eduService->getCurrentWeek();
             $timetable = @$eduService->getTimetable($token, $semester, $week);
             $news = (new MessageNewsService)->timetable($timetable);
+        } catch (ArgumentException $argumentException) {
+            $news = MessageTextService::binding();
         } catch (\Throwable $t) {
             LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
@@ -90,6 +99,26 @@ class MessageEventClickController extends Controller
             $news = MessageTextService::simple($t->getMessage());
             $app->staff->message($news)->to($openid)->send();
         }
+    }
+
+    private function eCard($message, $app)
+    {
+        $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
+        $eduService = new EduService();
+        try {
+            $modelUser = $eduService->rowByOpenid($openid);
+            $balance = (new DlpuEcardService)->getBalance($modelUser->username);
+            $consumption = (new DlpuEcardService)->getConsumption($modelUser->username);
+            $news = (new MessageNewsService)->eCard($balance, $consumption);
+        } catch (SystemException $systemException) {
+            $news = MessageTextService::binding();
+        } catch (\Throwable $t) {
+            LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
+            $news = MessageTextService::simple($t->getMessage());
+        }
+
+        $app->staff->message($news)->to($openid)->send();
     }
 
 }

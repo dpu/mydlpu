@@ -54,8 +54,8 @@ class MenuController extends Controller
                     ],
                     [
                         "type" => "click",
-                        "name" => "校园卡",
-                        "key" => "B1_ECARD"
+                        "name" => "一卡通",
+                        "key" => config('wechat.button.ecard'),
                     ],
                     [
                         "type" => "click",

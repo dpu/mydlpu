@@ -79,4 +79,21 @@ class MessageNewsService extends Service
 
         return $news;
     }
+
+    public function eCard($balance, $consumption)
+    {
+        $name = $balance['name'] ?? '';
+        $balanceBalance = $balance['balance'] ?? '未查询到';
+        $consumptionRanking = $consumption['ranking'] ?? '未查询到';
+        $consumptionConsumption = $consumption['consumption'] ?? '未查询到';
+
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '网络中心 » 一卡通 » ' . $name
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => sprintf("💰余额: %s 🔥消费: %s 📈排名: %s", $balanceBalance, $consumptionConsumption, $consumptionRanking),
+        ]);
+
+        return $news;
+    }
 }

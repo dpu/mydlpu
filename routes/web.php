@@ -56,3 +56,6 @@ $app->get('h5/scores/courses', ['as' => 'scoresCourses', 'uses' => 'Edu\EduContr
 
 $app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Edu\EduController@apiMinaTimetable']);
 
+$app->get('test', function (){
+    echo route('eduBinding');
+});

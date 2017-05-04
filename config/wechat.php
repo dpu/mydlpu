@@ -53,7 +53,8 @@ return [
         'exams' => 'EXAMS', //考试安排
         'news' => 'NEWS', //新闻动态
         'feedback' => 'FEEDBACK', //反馈
-        'about' => 'ABOUT' //关于
+        'about' => 'ABOUT', //关于
+        'ecard' => 'ECARD', //校园卡(一卡通)
     ],
 
     /*
