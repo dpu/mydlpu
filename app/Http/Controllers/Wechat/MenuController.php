@@ -60,7 +60,7 @@ class MenuController extends Controller
                     [
                         "type" => "click",
                         "name" => "网络自助",
-                        "key" => "B1_NETWORK"
+                        "key" => config('wechat.button.network'),
                     ],
                     [
                         "type" => "click",

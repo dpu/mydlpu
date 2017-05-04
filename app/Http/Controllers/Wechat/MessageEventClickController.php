@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Wechat;
 use App\Http\Controllers\Controller;
 use App\Services\Edu\EduService;
 use App\Services\LogService;
+use App\Services\NetWork\NetworkService;
 use App\Services\Wechat\MessageNewsService;
 use App\Services\Wechat\MessageTextService;
 use Cn\Xu42\DlpuEcard\Exception\SystemException;
@@ -28,6 +29,9 @@ class MessageEventClickController extends Controller
                 break;
             case config('wechat.button.ecard'):
                 return $this->eCard($message, $app);
+                break;
+            case config('wechat.button.network'):
+                return $this->network($message, $app);
                 break;
             default :
                 return 'ing';
@@ -114,7 +118,24 @@ class MessageEventClickController extends Controller
         } catch (SystemException $systemException) {
             $news = MessageTextService::binding();
         } catch (\Throwable $t) {
-            LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
+            LogService::edu('eCard error...', [$openid, $t->getMessage(), $t->getTrace()]);
+            $news = MessageTextService::simple($t->getMessage());
+        }
+
+        $app->staff->message($news)->to($openid)->send();
+    }
+
+    private function network($message, $app)
+    {
+        $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
+        $networkService = new NetworkService();
+        try {
+            $moderUser = $networkService->rowByOpenid($openid);
+            $network = $networkService->getByProxy($moderUser->username, $moderUser->password);
+            $news = (new MessageNewsService)->network($network);
+        } catch (\Throwable $t) {
+            LogService::edu('network error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
         }
 

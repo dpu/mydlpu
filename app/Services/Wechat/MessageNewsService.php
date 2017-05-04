@@ -96,4 +96,19 @@ class MessageNewsService extends Service
 
         return $news;
     }
+
+    public function network($network)
+    {
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '网络中心 » 自助服务 » 网络配置'
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '💻IP: ' . $network['ip'],
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => 'MAC: ' . $network['mac'],
+        ]);
+
+        return $news;
+    }
 }
