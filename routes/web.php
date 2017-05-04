@@ -61,6 +61,8 @@ $app->get('h5/cet/result', ['as' => 'cetResult', 'uses' => 'Cet\CetController@re
 $app->get('h5/scores/courses', ['as' => 'scoresCourses', 'uses' => 'Edu\EduController@scoresCoursesHtml']);
 
 $app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Edu\EduController@apiMinaTimetable']);
+$app->get('api/mina/time', ['as' => 'apiMinaCurrentTime', 'uses' => 'Edu\EduController@apiMinaCurrentTime']);
+
 
 $app->get('test', function (){
     echo route('eduBinding');

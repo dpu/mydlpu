@@ -96,4 +96,16 @@ class EduController extends Controller
         }
     }
 
+    public function apiMinaCurrentTime(Request $request)
+    {
+        try {
+            $eduService = new EduService();
+            $currentWeek = $eduService->getCurrentWeek();
+            $currentSemester = config('edu.semester');
+            return response()->json(['semester' => $currentSemester, 'week' => $currentWeek], 200, [], JSON_FORCE_OBJECT)->setCallback($request->input('callback'));
+        } catch (\Throwable $t) {
+            return response()->json(['errmsg' => $t->getMessage()], 404)->setCallback($request->input('callback'));
+        }
+    }
+
 }
