@@ -48,10 +48,66 @@ class MessageNewsService extends Service
             foreach ($today as $section => $item) {
                 $section += 1;
                 $news[] = new \EasyWeChat\Message\News([
-                    "title" => sprintf("%-16s%s\n%-17s%s", "第[$section]大节", $item[0][2], $item[0][3], $item[0][0])
+                    "title" => sprintf("%-16s%s\n%-17s%s", "第[$section]大节", $item[0]['room'], $item[0]['teacher'], $item[0]['name'])
                 ]);
             }
         }
+
+        return $news;
+    }
+
+    public function news($sourceNews, $newsType)
+    {
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '教务处 » 新闻中心 » ' . $newsType
+        ]);
+
+        if (!is_array($sourceNews) || count($sourceNews) === 0) {
+            $news[] = new \EasyWeChat\Message\News([
+                'title' => "啊啊～没有获取到" . $newsType
+            ]);
+            return $news;
+        }
+
+        $sourceNews = array_slice($sourceNews, 0, 5);
+        foreach ($sourceNews as $sourceNew) {
+            $news[] = new \EasyWeChat\Message\News([
+                'title' => $sourceNew['title'] . '[' . $sourceNew['time'] . ']',
+                'url' => $sourceNew['url'],
+            ]);
+        }
+
+        return $news;
+    }
+
+    public function eCard($balance, $consumption)
+    {
+        $name = $balance['name'] ?? '';
+        $balanceBalance = $balance['balance'] ?? '未查询到';
+        $consumptionRanking = $consumption['ranking'] ?? '未查询到';
+        $consumptionConsumption = $consumption['consumption'] ?? '未查询到';
+
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '网络中心 » 一卡通 » ' . $name
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => sprintf("💰余额: %s 🔥消费: %s 📈排名: %s", $balanceBalance, $consumptionConsumption, $consumptionRanking),
+        ]);
+
+        return $news;
+    }
+
+    public function network($network)
+    {
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '网络中心 » 自助服务 » 网络配置'
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '💻IP: ' . $network['ip'],
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => 'MAC: ' . $network['mac'],
+        ]);
 
         return $news;
     }

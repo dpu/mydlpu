@@ -58,7 +58,7 @@ class EduController extends Controller
         try {
             $openid = $app->oauth->user()->id;
         } catch (AuthorizeFailedException $e) {
-            return view('error.only_wechat_browser');
+            return redirect(config('wechat.url.prefix') . urlencode(route('eduBinding')) . config('wechat.url.suffix_base'));
         }
 
         $semester = $request->input('semester', '');
@@ -72,8 +72,8 @@ class EduController extends Controller
             $scores = $eduService->getCoursesScores($token, $semester);
             $data = ['semester' => $semester, 'title' => '我的期末成绩单', 'scores' => $scores];
         } catch (\Throwable $t) {
-            $data = ['semester' => $semester, 'title' => '', 'scores' => []];;
             LogService::edu('Edu scoresCoursesHtml error...', [$openid, $modelUser]);
+            return view('edu.binding.index')->with('openid', $openid);
         }
 
         return view('edu.scores.courses')->with('data', $data)->with('jsconfig', Config::wechatShareConfig());

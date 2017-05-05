@@ -1,0 +1,232 @@
+diff --git a/app/Http/Controllers/Wechat/MenuController.php b/app/Http/Controllers/Wechat/MenuController.php
+index bd2f10d..bc063d2 100644
+--- a/app/Http/Controllers/Wechat/MenuController.php
++++ b/app/Http/Controllers/Wechat/MenuController.php
+@@ -54,8 +54,8 @@ class MenuController extends Controller
+                     ],
+                     [
+                         "type" => "click",
+-                        "name" => "校园卡",
+-                        "key" => "B1_ECARD"
++                        "name" => "一卡通",
++                        "key" => config('wechat.button.ecard'),
+                     ],
+                     [
+                         "type" => "click",
+diff --git a/app/Http/Controllers/Wechat/MessageEventClickController.php b/app/Http/Controllers/Wechat/MessageEventClickController.php
+index b0a122a..3606cf4 100644
+--- a/app/Http/Controllers/Wechat/MessageEventClickController.php
++++ b/app/Http/Controllers/Wechat/MessageEventClickController.php
+@@ -7,8 +7,10 @@ use App\Services\Edu\EduService;
+ use App\Services\LogService;
+ use App\Services\Wechat\MessageNewsService;
+ use App\Services\Wechat\MessageTextService;
++use Cn\Xu42\DlpuEcard\Exception\SystemException;
++use Cn\Xu42\DlpuEcard\Service\DlpuEcardService;
+ use Cn\Xu42\DlpuNews\DlpuNews;
+-use function PHPSTORM_META\type;
++use Cn\Xu42\Qznjw2014\Common\Exception\ArgumentException;
+ 
+ class MessageEventClickController extends Controller
+ {
+@@ -24,6 +26,9 @@ class MessageEventClickController extends Controller
+             case config('wechat.button.news'):
+                 return $this->news($message, $app);
+                 break;
++            case config('wechat.button.ecard'):
++                return $this->eCard($message, $app);
++                break;
+             default :
+                 return 'ing';
+                 break;
+@@ -42,6 +47,8 @@ class MessageEventClickController extends Controller
+             $token = $eduService->getToken($modelUser->username, $modelUser->password);
+             $scoresLevel = $eduService->getLevelScores($token);
+             $news = (new MessageNewsService)->scoreLevel($scoresLevel);
++        } catch (ArgumentException $argumentException) {
++            $news = MessageTextService::binding();
+         } catch (\Throwable $t) {
+             LogService::edu('Edu scoreLevel error...', [$openid, $t->getMessage(), $t->getTrace()]);
+             $news = MessageTextService::simple($t->getMessage());
+@@ -62,6 +69,8 @@ class MessageEventClickController extends Controller
+             $week = $eduService->getCurrentWeek();
+             $timetable = @$eduService->getTimetable($token, $semester, $week);
+             $news = (new MessageNewsService)->timetable($timetable);
++        } catch (ArgumentException $argumentException) {
++            $news = MessageTextService::binding();
+         } catch (\Throwable $t) {
+             LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
+             $news = MessageTextService::simple($t->getMessage());
+@@ -92,4 +101,24 @@ class MessageEventClickController extends Controller
+         }
+     }
+ 
++    private function eCard($message, $app)
++    {
++        $openid = $message->FromUserName;
++        $app->staff->message(MessageTextService::ing())->to($openid)->send();
++        $eduService = new EduService();
++        try {
++            $modelUser = $eduService->rowByOpenid($openid);
++            $balance = (new DlpuEcardService)->getBalance($modelUser->username);
++            $consumption = (new DlpuEcardService)->getConsumption($modelUser->username);
++            $news = (new MessageNewsService)->eCard($balance, $consumption);
++        } catch (SystemException $systemException) {
++            $news = MessageTextService::binding();
++        } catch (\Throwable $t) {
++            LogService::edu('Edu timetable error...', [$openid, $t->getMessage(), $t->getTrace()]);
++            $news = MessageTextService::simple($t->getMessage());
++        }
++
++        $app->staff->message($news)->to($openid)->send();
++    }
++
+ }
+diff --git a/app/Services/Wechat/MessageNewsService.php b/app/Services/Wechat/MessageNewsService.php
+index 6c315e8..dd4fdbf 100644
+--- a/app/Services/Wechat/MessageNewsService.php
++++ b/app/Services/Wechat/MessageNewsService.php
+@@ -79,4 +79,21 @@ class MessageNewsService extends Service
+ 
+         return $news;
+     }
++
++    public function eCard($balance, $consumption)
++    {
++        $name = $balance['name'] ?? '';
++        $balanceBalance = $balance['balance'] ?? '未查询到';
++        $consumptionRanking = $consumption['ranking'] ?? '未查询到';
++        $consumptionConsumption = $consumption['consumption'] ?? '未查询到';
++
++        $news[] = new \EasyWeChat\Message\News([
++            'title' => '网络中心 » 一卡通 » ' . $name
++        ]);
++        $news[] = new \EasyWeChat\Message\News([
++            'title' => sprintf("💰余额: %s 🔥消费: %s 📈排名: %s", $balanceBalance, $consumptionConsumption, $consumptionRanking),
++        ]);
++
++        return $news;
++    }
+ }
+diff --git a/app/Services/Wechat/MessageTextService.php b/app/Services/Wechat/MessageTextService.php
+index cf81818..30943d5 100644
+--- a/app/Services/Wechat/MessageTextService.php
++++ b/app/Services/Wechat/MessageTextService.php
+@@ -17,67 +17,11 @@ class MessageTextService extends Service
+         return new Text(['content' =>  '正在为您查询...']);
+     }
+ 
+-    public static function serverWrong()
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "服务器开小差了 ==! ";
+-        return $text;
+-    }
+-
+-    public static function register($message)
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "=== 尚未绑定学号 ===\n\n回复: 绑定+学号+密码\n例: 绑定1305040301passwd";
+-        return $text;
+-    }
+-
+-    public static function scoreGrade()
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "大学英语四六级成绩查询\n\n回复: cet+姓名+准考证号\n例: cet李白211070161201234";
+-        return $text;
+-    }
+-
+-    public static function wrongCetQuery()
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "未查询到成绩\n可能尚未公布成绩或格式有误, 请按此格式回复以查询\n\ncet李白211070161201234";
+-        return $text;
+-    }
+-
+     public static function errorCetArgument()
+     {
+         return new Text(['content' =>  config('paper.cet.error.argument')]);
+     }
+ 
+-    public static function wrongRegister()
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "学号或密码错误";
+-        return $text;
+-    }
+-
+-    public static function express()
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "试用快递实时追踪服务\n\n回复: 快递+单号+备注\n例0: 快递1151302195208\n例1: 快递1151302195208阿里云发票\n例2: 快递 1151302195208 阿里云发票\n\n备注的第一个字若为数字,请在单号与备注之间添加空格";
+-        return $text;
+-    }
+-
+-    public static function wrongExpress($url)
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "您的快件未追踪到\n可能单号错误或刚发货\n\n" . '<a href="' . $url . '">【点此查看快件详情】</a>';
+-        return $text;
+-    }
+-
+-    public static function receiptExpress($data, $url)
+-    {
+-        $text = new \EasyWeChat\Message\Text;
+-        $text->content = "您的快件已经是签收状态\n\n$data\n\n" . '<a href="' . $url . '">【点此查看快件详情】</a>';
+-        return $text;
+-    }
+-
+ 
+     public static function registerNetwork($message)
+     {
+@@ -93,4 +37,9 @@ class MessageTextService extends Service
+         return $text;
+     }
+ 
++    public static function binding()
++    {
++        return new Text(['content' =>  '请先绑定教务系统 <a href="' . config('edu.url.binding') . '">点此绑定</a>']);
++    }
++
+ }
+diff --git a/config/edu.php b/config/edu.php
+index 676c7a3..55f5c23 100644
+--- a/config/edu.php
++++ b/config/edu.php
+@@ -7,4 +7,8 @@ return [
+     'current_events' => '新闻动态',
+     'notice' => '通知公告',
+     'teaching_files' => '教务文件',
++    'url' => [
++        'binding' => config('wechat.url.prefix').urlencode(route('eduBinding')).config('wechat.url.suffix_base'),
++        'remove_binding' => config('wechat.url.prefix').urlencode(route('eduBindingRemove')).config('wechat.url.suffix_base'),
++    ],
+ ];
+\ No newline at end of file
+diff --git a/config/wechat.php b/config/wechat.php
+index cbc667b..bad14cd 100755
+--- a/config/wechat.php
++++ b/config/wechat.php
+@@ -53,7 +53,8 @@ return [
+         'exams' => 'EXAMS', //考试安排
+         'news' => 'NEWS', //新闻动态
+         'feedback' => 'FEEDBACK', //反馈
+-        'about' => 'ABOUT' //关于
++        'about' => 'ABOUT', //关于
++        'ecard' => 'ECARD', //校园卡(一卡通)
+     ],
+ 
+     /*
+diff --git a/routes/web.php b/routes/web.php
+index 1116e00..b6efad3 100644
+--- a/routes/web.php
++++ b/routes/web.php
+@@ -56,3 +56,6 @@ $app->get('h5/scores/courses', ['as' => 'scoresCourses', 'uses' => 'Edu\EduContr
+ 
+ $app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Edu\EduController@apiMinaTimetable']);
+ 
++$app->get('test', function (){
++    echo route('eduBinding');
++});
+\ No newline at end of file

@@ -45,6 +45,12 @@ $app->post('h5/edu/binding/result', ['as' => 'eduBindingResult', 'uses' => 'Edu\
 /** 教务处学号解除绑定 */
 $app->get('h5/edu/binding/remove', ['as' => 'eduBindingRemove', 'uses' => 'Edu\EduController@removeBindingHtml']);
 
+/** 网页 锐捷自助绑定 */
+$app->get('h5/net/binding', ['as' => 'netBinding', 'uses' => 'Net\NetController@bindingHtml']);
+
+/** 锐捷自助绑定处理 */
+$app->post('h5/net/binding/result', ['as' => 'netBindingResult', 'uses' => 'Net\NetController@bindingResultHtml']);
+
 /** 网页 四六级成绩查询 */
 $app->get('h5/cet', ['as' => 'cet', 'uses' => 'Cet\CetController@indexHtml']);
 
@@ -53,3 +59,12 @@ $app->get('h5/cet/result', ['as' => 'cetResult', 'uses' => 'Cet\CetController@re
 
 /** 网页 期末成绩 */
 $app->get('h5/scores/courses', ['as' => 'scoresCourses', 'uses' => 'Edu\EduController@scoresCoursesHtml']);
+
+$app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Mina\MinaController@timetable']);
+$app->get('api/mina/time', ['as' => 'apiMinaCurrentTime', 'uses' => 'Mina\MinaController@currentTime']);
+$app->post('api/mina/feedback', ['as' => 'apiMinaFeedback', 'uses' => 'Mina\MinaController@feedback']);
+
+
+$app->get('test', function (){
+    echo route('eduBinding');
+});

@@ -1,22 +1,40 @@
 <?php
 
-namespace App\Services\Edu;
+namespace App\Services\NetWork;
 
 use App\Services\LogService;
-use Cn\Xu42\Qznjw2014\Account\Service\AccountService;
-use Cn\Xu42\Qznjw2014\Education\Service\EducationService;
+use Cn\Xu42\DlpuNetwork\Exception\BaseException;
 
-class EduService
+class NetworkService
 {
+    const URL_DLPU_NETWORK_PROXY = 'http://myproject.dlpu.edu.cn/network/debug.php?username=%s&password=%s';
+
+    public function getByProxy($username, $password)
+    {
+        try {
+            $url = sprintf(self::URL_DLPU_NETWORK_PROXY, $username, $password);
+            $network = file_get_contents($url);
+            $network = json_decode($network, true);
+        } catch (\Throwable $t) {
+            throw new BaseException('账号密码错误');
+        }
+        if (empty($network)) throw new BaseException('账号密码错误');
+        return $network;
+    }
+
+    public function rowByOpenid($openid)
+    {
+        return \App\Models\NetUsers::where('openid', $openid)->first();
+    }
 
     public function binding($openid, $username, $password, $mobile = '')
     {
         $this->removeFromDB($openid);
 
         try {
-            $token = (new AccountService)->getToken($username, $password);
+            $this->getByProxy($username, $password);
         } catch (\Throwable $t) {
-            LogService::edu('Edu getToken Error...', [$openid, $username, $password, $t->getMessage(), $t->getTrace()]);
+            LogService::edu('NetworkService getByProxy Error...', [$openid, $username, $password, $t->getMessage(), $t->getTrace()]);
             return ['icon' => 'warn', 'desc' => $t->getMessage()];
         }
 
@@ -24,11 +42,10 @@ class EduService
             $this->recordToDB($openid, $username, $password, $mobile);
             return ['icon' => 'success', 'title' => config('paper.edu.binding.success')];
         } catch (\Throwable $t) {
-            LogService::edu('Edu recordToDB error...', [$openid, $username, $password, $t->getMessage(), $t->getTrace()]);
+            LogService::edu('NetworkService recordToDB error...', [$openid, $username, $password, $t->getMessage(), $t->getTrace()]);
             return ['icon' => 'warn', 'title' => config('paper.edu.binding.error')];
         }
     }
-
 
     public function removeBinding($openid)
     {
@@ -41,40 +58,10 @@ class EduService
         return ['icon' => 'warn', 'title' => config('paper.edu.binding.have_no')];
     }
 
-
-    public function rowByOpenid($openid)
-    {
-        return \App\Models\EduUsers::where('openid', $openid)->first();
-    }
-
-    public function getToken($username, $password)
-    {
-        return (new AccountService)->getToken($username, $password);
-    }
-
-    public function getCoursesScores($token, $semester = '')
-    {
-        return (new EducationService)->getCoursesScores($token, $semester);
-    }
-
-    public function getTimetable($token, $semester, $week = '')
-    {
-        return (new EducationService)->getTimetable($token, $semester, $week);
-    }
-
-    public function getCurrentWeek()
-    {
-        return (new EducationService)->getCurrentWeek();
-    }
-
-    public function getLevelScores($token)
-    {
-        return (new EducationService)->getLevelScores($token);
-    }
     private function recordToDB($openid, $username, $password, $mobile)
     {
         $this->removeFromDB($openid);
-        $modelEduUser = new \App\Models\EduUsers;
+        $modelEduUser = new \App\Models\NetUsers;
         $modelEduUser->openid = $openid;
         $modelEduUser->username = $username;
         $modelEduUser->password = $password;
@@ -85,9 +72,7 @@ class EduService
 
     private function removeFromDB($openid)
     {
-        $modelEduUser = \App\Models\EduUsers::where('openid', $openid)->delete();
+        $modelEduUser = \App\Models\NetUsers::where('openid', $openid)->delete();
         return is_null($modelEduUser) ? false : true;
     }
-
-
 }

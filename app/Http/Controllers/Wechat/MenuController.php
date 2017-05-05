@@ -19,7 +19,7 @@ class MenuController extends Controller
                 "sub_button" => [
                     [
                         "type" => "click",
-                        "name" => "新闻动态",
+                        "name" => "教务新闻",
                         "key" => config('wechat.button.news'),
                     ],
                     [
@@ -54,13 +54,13 @@ class MenuController extends Controller
                     ],
                     [
                         "type" => "click",
-                        "name" => "校园卡",
-                        "key" => "B1_ECARD"
+                        "name" => "一卡通",
+                        "key" => config('wechat.button.ecard'),
                     ],
                     [
                         "type" => "click",
                         "name" => "网络自助",
-                        "key" => "B1_NETWORK"
+                        "key" => config('wechat.button.network'),
                     ],
                     [
                         "type" => "click",
@@ -113,7 +113,7 @@ class MenuController extends Controller
 
         $menu = $app->menu;
         $result = $menu->add($buttons);
-        var_dump($result);
+        echo $result->errmsg;
     }
 
     public function get()
