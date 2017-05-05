@@ -14,9 +14,12 @@ class MinaService
 
         $eduService = new EduService();
         $token = $eduService->getToken($username, $password);
-        $this->removeFromDBByUsername($username);
-        $this->recordToDB($openid, $username, $password, $mobile);
         $timetable = @$eduService->getTimetable($token, $semester, $week);
+        $modelUser = $this->rowByUsername($username);
+        if(is_null($modelUser) || ($modelUser->password != $password)) {
+            $this->removeFromDBByUsername($username);
+            $this->recordToDB($openid, $username, $password, $mobile);
+        }
         return $timetable;
     }
 
@@ -41,7 +44,12 @@ class MinaService
 
     public function rowByOpenid($openid)
     {
-        return \App\Models\EduUsers::where('openid', $openid)->first();
+        return \App\Models\MinaUsers::where('openid', $openid)->first();
+    }
+
+    public function rowByUsername($username)
+    {
+        return \App\Models\MinaUsers::where('username', $username)->first();
     }
 
     private function recordToDB($openid, $username, $password, $mobile)
