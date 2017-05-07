@@ -48,9 +48,9 @@ class MenuController extends Controller
                 "name" => "伴我同行",
                 "sub_button" => [
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "校内电话",
-                        "key"  => "B1_TEL"
+                        "url"  => config('wechat.url.prefix') . urlencode(route('netTel')) . config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "click",
