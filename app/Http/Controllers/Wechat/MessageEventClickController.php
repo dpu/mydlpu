@@ -50,6 +50,7 @@ class MessageEventClickController extends Controller
         $eduService = new EduService();
         try {
             $modelUser = $eduService->rowByOpenid($openid);
+            if(is_null($modelUser)) throw new ArgumentException();
             $token = $eduService->getToken($modelUser->username, $modelUser->password);
             $scoresLevel = $eduService->getLevelScores($token);
             $news = (new MessageNewsService)->scoreLevel($scoresLevel);
@@ -72,6 +73,7 @@ class MessageEventClickController extends Controller
         $eduService = new EduService();
         try {
             $modelUser = $eduService->rowByOpenid($openid);
+            if (is_null($modelUser)) throw new ArgumentException();
             $token = $eduService->getToken($modelUser->username, $modelUser->password);
             $semester = config('edu.semester');
             $week = $eduService->getCurrentWeek();
@@ -118,6 +120,7 @@ class MessageEventClickController extends Controller
         $eduService = new EduService();
         try {
             $modelUser = $eduService->rowByOpenid($openid);
+            if (is_null($modelUser)) throw new SystemException();
             $balance = (new DlpuEcardService)->getBalance($modelUser->username);
             $consumption = (new DlpuEcardService)->getConsumption($modelUser->username);
             $news = (new MessageNewsService)->eCard($balance, $consumption);
@@ -137,8 +140,9 @@ class MessageEventClickController extends Controller
         $app->staff->message(MessageTextService::ing())->to($openid)->send();
         $networkService = new NetworkService();
         try {
-            $moderUser = $networkService->rowByOpenid($openid);
-            $network = $networkService->getByProxy($moderUser->username, $moderUser->password);
+            $modelUser = $networkService->rowByOpenid($openid);
+            if (is_null($modelUser)) throw new BaseException();
+            $network = $networkService->getByProxy($modelUser->username, $modelUser->password);
             $news = (new MessageNewsService)->network($network);
         } catch (BaseException $baseException) {
             $news = MessageTextService::bindingNet();
