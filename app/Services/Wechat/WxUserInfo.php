@@ -9,11 +9,14 @@ class WxUserInfo extends Service
 
     public function push($openid)
     {
-        $info = $this->getUserInfoFromWxByOpenid($openid);
-        if ($this->rowByOpenid($openid)) {
-            $this->updateToDB($openid, $info);
-        } else {
+        $modelUser = $this->rowByOpenid($openid);
+        if (is_null($modelUser)) {
+            $info = $this->getUserInfoFromWxByOpenid($openid);
             $this->recordToDB($info);
+        }
+        if ((time()-strtotime($modelUser->updated_at)) > 3600*24) {
+            $info = $this->getUserInfoFromWxByOpenid($openid);
+            $this->updateToDB($openid, $info);
         }
     }
 
@@ -39,6 +42,8 @@ class WxUserInfo extends Service
         $modelUser->groupid = $info['groupid'];
 
         $modelUser->save();
+
+        return $modelUser;
     }
 
     public function rowByOpenid($openid)
@@ -62,6 +67,8 @@ class WxUserInfo extends Service
         $modelUser->groupid = $info['groupid'];
 
         $modelUser->save();
+
+        return $modelUser;
     }
 
 }
