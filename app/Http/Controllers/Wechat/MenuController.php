@@ -63,14 +63,14 @@ class MenuController extends Controller
                         "key" => config('wechat.button.network'),
                     ],
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "校园地图",
-                        "key" => "B1_MAP"
+                        "url" => "https://ww1.sinaimg.cn/large/006tNc79gy1ffe5joyusxg31kw1a9n70.gif"
                     ],
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "学年校历",
-                        "key" => "B1_CALENDAR"
+                        "url" => "http://api.wx.dlpu.edu.cn/xiaoli"
                     ],
                 ]
             ],
