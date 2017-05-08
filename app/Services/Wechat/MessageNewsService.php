@@ -48,7 +48,7 @@ class MessageNewsService extends Service
             foreach ($today as $section => $item) {
                 $section += 1;
                 $news[] = new \EasyWeChat\Message\News([
-                    "title" => sprintf("%-16s%s\n%-17s%s", "第[$section]大节", $item[0]['room'], $item[0]['teacher'], $item[0]['name'])
+                    "title" => sprintf("%-16s%s\n%s", "第 $section 大节", $item[0]['name'], $item[0]['room'])
                 ]);
             }
         }
