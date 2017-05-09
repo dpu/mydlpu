@@ -38,9 +38,11 @@ class MenuController extends Controller
                         "url" => config('wechat.url.prefix') . urlencode(route('cet')) . config('wechat.url.suffix_base'),
                     ],
                     [
-                        "type" => "click",
-                        "name" => "今天课表",
-                        "key" => config('wechat.button.timetable'),
+                        "type" => "miniprogram",
+                        "name" => "课表",
+                        "appid" => 'wx5ab225cf1ef2ab43',
+                        "pagepath" => 'pages/index/index',
+                        "url" => 'http://mydlpu.xu42.cn/',
                     ],
                 ]
             ],
