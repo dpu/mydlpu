@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\ExpressTracking::class,
+        \App\Console\Commands\EduNewsListUpdate::class,
     ];
 
     /**
@@ -24,11 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('express:tracking')
-            ->name('express')
-            ->withoutOverlapping()
-            ->everyTenMinutes()
-            ->appendOutputTo(storage_path('logs/schedule_express.log'));
+        $schedule->command('express:tracking')->name('express')->withoutOverlapping()->everyTenMinutes()->appendOutputTo(storage_path('logs/schedule_express.log'));
+
+        $schedule->command('edu:news')->name('news')->withoutOverlapping()->everyThirtyMinutes()->appendOutputTo(storage_path('logs/schedule_edu_news.log'));
 
     }
 }

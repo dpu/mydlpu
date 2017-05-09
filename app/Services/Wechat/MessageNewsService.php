@@ -56,15 +56,15 @@ class MessageNewsService extends Service
         return $news;
     }
 
-    public function news($sourceNews, $newsType)
+    public static function news($sourceNews)
     {
         $news[] = new \EasyWeChat\Message\News([
-            'title' => '教务处 » 新闻中心 » ' . $newsType
+            'title' => '教务处 » 新闻中心 » ' . $sourceNews[0]['type']
         ]);
 
         if (!is_array($sourceNews) || count($sourceNews) === 0) {
             $news[] = new \EasyWeChat\Message\News([
-                'title' => "啊啊～没有获取到" . $newsType
+                'title' => "啊啊～没有获取到" . $sourceNews[0]['type']
             ]);
             return $news;
         }

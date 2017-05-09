@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Wechat;
 
 use App\Http\Controllers\Controller;
 use App\Services\Edu\EduService;
+use App\Services\Edu\NewsListService;
 use App\Services\LogService;
 use App\Services\NetWork\NetworkService;
 use App\Services\Wechat\MessageNewsService;
@@ -11,7 +12,6 @@ use App\Services\Wechat\MessageTextService;
 use Cn\Xu42\DlpuEcard\Exception\SystemException;
 use Cn\Xu42\DlpuEcard\Service\DlpuEcardService;
 use Cn\Xu42\DlpuNetwork\Exception\BaseException;
-use Cn\Xu42\DlpuNews\DlpuNews;
 use Cn\Xu42\Qznjw2014\Account\Exception\LoginException;
 use Cn\Xu42\Qznjw2014\Common\Exception\ArgumentException;
 
@@ -95,16 +95,13 @@ class MessageEventClickController extends Controller
     {
         $openid = $message->FromUserName;
         $app->staff->message(MessageTextService::ing())->to($openid)->send();
-        $newsService = new DlpuNews();
+        $newsListService = new NewsListService();
         try {
-            $currentEvents = $newsService->currentEvents();
-            $news = (new MessageNewsService)->news($currentEvents, config('edu.current_events'));
+            $news = MessageNewsService::news($newsListService->currentEvents());
             $app->staff->message($news)->to($openid)->send();
-            $notice = $newsService->notice();
-            $news = (new MessageNewsService)->news($notice, config('edu.notice'));
+            $news = MessageNewsService::news($newsListService->notice());
             $app->staff->message($news)->to($openid)->send();
-            $teachingFiles = $newsService->teachingFiles();
-            $news = (new MessageNewsService)->news($teachingFiles, config('edu.teaching_files'));
+            $news = MessageNewsService::news($newsListService->teachingFiles());
             $app->staff->message($news)->to($openid)->send();
         } catch (\Throwable $t) {
             LogService::edu('news currentEvents error...', [$openid, $t->getMessage(), $t->getTrace()]);
