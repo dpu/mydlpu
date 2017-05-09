@@ -12,6 +12,9 @@ class MinaService
         $openid = '';
         $mobile = '';
 
+        //TODO 13级学生走2015-2016-1
+        if(substr($username, 0, 2) == '13') $semester = '2015-2016-1';
+
         $eduService = new EduService();
         $token = $eduService->getToken($username, $password);
         $timetable = @$eduService->getTimetable($token, $semester, $week);
