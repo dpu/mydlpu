@@ -21,13 +21,14 @@ class MinaService
             $eduService = new EduService();
             $token = $eduService->getToken($username, $password);
             $timetable = @$eduService->getTimetable($token, $semester, $week);
+
+            $modelUser = $this->rowByUsername($username);
+            if (is_null($modelUser) || ($modelUser->password != $password)) {
+                $this->removeFromDBByUsername($username);
+                $this->recordToDB($openid, $username, $password, $mobile);
+            }
         }
 
-        $modelUser = $this->rowByUsername($username);
-        if (is_null($modelUser) || ($modelUser->password != $password)) {
-            $this->removeFromDBByUsername($username);
-            $this->recordToDB($openid, $username, $password, $mobile);
-        }
         return $timetable;
     }
 
