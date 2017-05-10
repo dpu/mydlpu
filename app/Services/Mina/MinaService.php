@@ -3,6 +3,7 @@
 namespace App\Services\Mina;
 
 use App\Services\Edu\EduService;
+use App\Services\Edu\EduTimetableService;
 
 class MinaService
 {
@@ -13,13 +14,17 @@ class MinaService
         $mobile = '';
 
         //TODO 13级学生走2015-2016-1
-        if(substr($username, 0, 2) == '13') $semester = '2015-2016-1';
+        if (substr($username, 0, 2) == '13') $semester = '2015-2016-1';
 
-        $eduService = new EduService();
-        $token = $eduService->getToken($username, $password);
-        $timetable = @$eduService->getTimetable($token, $semester, $week);
+        $timetable = EduTimetableService::get($username, $semester, $week);
+        if (!$timetable) {
+            $eduService = new EduService();
+            $token = $eduService->getToken($username, $password);
+            $timetable = @$eduService->getTimetable($token, $semester, $week);
+        }
+
         $modelUser = $this->rowByUsername($username);
-        if(is_null($modelUser) || ($modelUser->password != $password)) {
+        if (is_null($modelUser) || ($modelUser->password != $password)) {
             $this->removeFromDBByUsername($username);
             $this->recordToDB($openid, $username, $password, $mobile);
         }
