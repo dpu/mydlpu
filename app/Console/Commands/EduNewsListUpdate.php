@@ -17,6 +17,7 @@ class EduNewsListUpdate extends Command
     {
         $newsService = new DlpuNews();
         try {
+            $this->truncateTable();
             $this->save(config('edu.current_events'), $newsService->currentEvents());
             $this->save(config('edu.notice'), $newsService->notice());
             $this->save(config('edu.teaching_files'), $newsService->teachingFiles());
@@ -27,7 +28,6 @@ class EduNewsListUpdate extends Command
 
     private function save($type, $list)
     {
-        $this->deleteByType($type);
         foreach ($list as $item) {
             $modelNews = new \App\Models\News;
             $modelNews->type = $type;
@@ -42,6 +42,11 @@ class EduNewsListUpdate extends Command
     private function deleteByType($type)
     {
         return \App\Models\News::where('type', $type)->delete();
+    }
+
+    private function truncateTable()
+    {
+        return \App\Models\News::truncate();
     }
 
 }
