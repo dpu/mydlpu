@@ -22,7 +22,6 @@
                     <div class="weui-cell__hd"><label class="weui-label">单号</label></div>
                     <div class="weui-cell__bd">
                         <input name="nu" class="weui-input" type="text" placeholder="请输入快递单号" required/>
-                        <input name="openid" value="{{$openid}}" type="hidden"/>
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -41,6 +40,21 @@
         </div>
     </div>
 </div>
-
+<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    shareData = {
+        title: '物流追踪 实时接收快递动态',
+        desc: '',
+        link: location.href.split('#')[0],
+        imgUrl: "https://dn-xuyangjie.qbox.me/icon.png"
+    };
+    wx.config({!! $jsconfig !!});
+    wx.ready(function () {
+        wx.onMenuShareTimeline(shareData);
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareQQ(shareData);
+        wx.onMenuShareQZone(shareData);
+    });
+</script>
 </body>
 </html>
