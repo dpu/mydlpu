@@ -22,6 +22,7 @@
                     <div class="weui-cell__hd"><label class="weui-label">单号</label></div>
                     <div class="weui-cell__bd">
                         <input name="nu" class="weui-input" type="text" placeholder="请输入快递单号" required/>
+                        <input name="openid" value="{{$openid}}" type="hidden"/>
                     </div>
                 </div>
                 <div class="weui-cell">

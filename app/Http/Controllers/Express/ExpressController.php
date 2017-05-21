@@ -20,7 +20,7 @@ class ExpressController extends Controller
             return redirect(config('wechat.url.prefix') . urlencode(route('express')) . config('wechat.url.suffix_base'));
         }
 
-        return view('express.index')->with('jsconfig', Config::wechatShareConfig());
+        return view('express.index')->with('openid', $openid)->with('jsconfig', Config::wechatShareConfig());
     }
 
     public function resultHtml(Request $request)
