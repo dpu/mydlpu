@@ -69,7 +69,7 @@ class MessageNewsService extends Service
             return $news;
         }
 
-        $sourceNews = array_slice($sourceNews, 0, 5);
+        $sourceNews = array_slice($sourceNews, 0, 3);
         foreach ($sourceNews as $sourceNew) {
             $news[] = new \EasyWeChat\Message\News([
                 'title' => $sourceNew['title'] . '[' . $sourceNew['time'] . ']',
