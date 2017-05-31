@@ -94,6 +94,11 @@ class MenuController extends Controller
                         "name" => "大连天气",
                         "key" => config('wechat.button.weather')
                     ],
+                    [
+                        "type" => "view",
+                        "name" => "网络工程",
+                        "url" => "http://guoli.dlpu.edu.cn/"
+                    ],
                 ]
             ],
         ];
