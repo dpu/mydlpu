@@ -32,28 +32,23 @@ $app->get('wechat/menu/get', 'Wechat\MenuController@get');
 
 /** 网页 快递查询 */
 $app->get('h5/express', ['as' => 'express', 'uses' => 'Express\ExpressController@indexHtml']);
-
 /** 网页 快递查询结果 */
 $app->post('h5/express/result', ['as' => 'expressResult', 'uses' => 'Express\ExpressController@resultHtml']);
 
 /** 网页 教务处学号绑定 */
 $app->get('h5/edu/binding', ['as' => 'eduBinding', 'uses' => 'Edu\EduController@bindingHtml']);
-
 /** 教务处学号绑定处理 */
 $app->post('h5/edu/binding/result', ['as' => 'eduBindingResult', 'uses' => 'Edu\EduController@bindingResultHtml']);
-
 /** 教务处学号解除绑定 */
 $app->get('h5/edu/binding/remove', ['as' => 'eduBindingRemove', 'uses' => 'Edu\EduController@removeBindingHtml']);
 
 /** 网页 锐捷自助绑定 */
 $app->get('h5/net/binding', ['as' => 'netBinding', 'uses' => 'Net\NetController@bindingHtml']);
-
 /** 锐捷自助绑定处理 */
 $app->post('h5/net/binding/result', ['as' => 'netBindingResult', 'uses' => 'Net\NetController@bindingResultHtml']);
 
 /** 网页 四六级成绩查询 */
 $app->get('h5/cet', ['as' => 'cet', 'uses' => 'Cet\CetController@indexHtml']);
-
 /** 网页 四六级成绩查询结果 */
 $app->get('h5/cet/result', ['as' => 'cetResult', 'uses' => 'Cet\CetController@resultHtml']);
 
@@ -64,6 +59,9 @@ $app->get('api/mina/timetable', ['as' => 'apiMinaTimetable', 'uses' => 'Mina\Min
 $app->get('api/mina/time', ['as' => 'apiMinaCurrentTime', 'uses' => 'Mina\MinaController@currentTime']);
 $app->post('api/mina/feedback', ['as' => 'apiMinaFeedback', 'uses' => 'Mina\MinaController@feedback']);
 
+/** 网页 校内电话 */
+$app->get('h5/net/tel', ['as' => 'netTel', 'uses' => 'Net\NetController@telHtml']);
+$app->get('h5/net/tel/result', ['as' => 'netTelResult', 'uses' => 'Net\NetController@telResultHtml']);
 
 $app->get('test', function (){
     echo route('eduBinding');

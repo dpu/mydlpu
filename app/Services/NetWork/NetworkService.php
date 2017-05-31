@@ -58,6 +58,12 @@ class NetworkService
         return ['icon' => 'warn', 'title' => config('paper.edu.binding.have_no')];
     }
 
+    public function telRowByKeyword($keyword)
+    {
+        if (empty($keyword)) return [];
+        return \App\Models\Tel::where('sort', 'like', "%$keyword%")->orWhere('name', 'like', "%$keyword%")->distinct()->get();
+    }
+
     private function recordToDB($openid, $username, $password, $mobile)
     {
         $this->removeFromDB($openid);

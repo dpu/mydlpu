@@ -56,6 +56,8 @@ return [
         'about' => 'ABOUT', //关于
         'ecard' => 'ECARD', //校园卡(一卡通)
         'network' => 'NETWORK', //锐捷自助
+        'tel' => 'TEL', //校内电话
+        'weather' => 'B2_WEATHER', //大连天气
     ],
 
     /*

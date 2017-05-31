@@ -48,7 +48,7 @@ class MessageNewsService extends Service
             foreach ($today as $section => $item) {
                 $section += 1;
                 $news[] = new \EasyWeChat\Message\News([
-                    "title" => sprintf("%-16s%s\n%-17s%s", "第[$section]大节", $item[0]['room'], $item[0]['teacher'], $item[0]['name'])
+                    "title" => sprintf("%-16s%s\n%s", "第 $section 大节", $item[0]['name'], $item[0]['room'])
                 ]);
             }
         }
@@ -56,20 +56,20 @@ class MessageNewsService extends Service
         return $news;
     }
 
-    public function news($sourceNews, $newsType)
+    public static function news($sourceNews)
     {
         $news[] = new \EasyWeChat\Message\News([
-            'title' => '教务处 » 新闻中心 » ' . $newsType
+            'title' => '教务处 » 新闻中心 » ' . $sourceNews[0]['type']
         ]);
 
         if (!is_array($sourceNews) || count($sourceNews) === 0) {
             $news[] = new \EasyWeChat\Message\News([
-                'title' => "啊啊～没有获取到" . $newsType
+                'title' => "啊啊～没有获取到" . $sourceNews[0]['type']
             ]);
             return $news;
         }
 
-        $sourceNews = array_slice($sourceNews, 0, 5);
+        $sourceNews = array_slice($sourceNews, 0, 3);
         foreach ($sourceNews as $sourceNew) {
             $news[] = new \EasyWeChat\Message\News([
                 'title' => $sourceNew['title'] . '[' . $sourceNew['time'] . ']',
@@ -107,6 +107,28 @@ class MessageNewsService extends Service
         ]);
         $news[] = new \EasyWeChat\Message\News([
             'title' => 'MAC: ' . $network['mac'],
+        ]);
+
+        return $news;
+    }
+
+    public function weather($data)
+    {
+        $data = $data['result']['data'];
+
+        $news = [];
+
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '天气',
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '实时 ' . $data['realtime']['weather']['temperature'] . '°C  ' . $data['realtime']['weather']['info'] . '  ' . $data['realtime']['wind']['direct'] . $data['realtime']['wind']['power'],
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '明天 ' . $data['weather'][1]['info']['night'][2] . '~' . $data['weather'][1]['info']['day'][2] . '°C  ' . $data['weather'][1]['info']['dawn'][1] . '  ' . $data['weather'][1]['info']['dawn'][3] . $data['weather'][1]['info']['dawn'][4],
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '后天 ' . $data['weather'][2]['info']['night'][2] . '~' . $data['weather'][2]['info']['day'][2] . '°C  ' . $data['weather'][2]['info']['dawn'][1] . '  ' . $data['weather'][2]['info']['dawn'][3] . $data['weather'][2]['info']['dawn'][4],
         ]);
 
         return $news;

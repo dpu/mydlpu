@@ -38,9 +38,11 @@ class MenuController extends Controller
                         "url" => config('wechat.url.prefix') . urlencode(route('cet')) . config('wechat.url.suffix_base'),
                     ],
                     [
-                        "type" => "click",
-                        "name" => "今天课表",
-                        "key" => config('wechat.button.timetable'),
+                        "type" => "miniprogram",
+                        "name" => "课表",
+                        "appid" => 'wx5ab225cf1ef2ab43',
+                        "pagepath" => 'pages/index/index',
+                        "url" => 'http://mydlpu.xu42.cn/',
                     ],
                 ]
             ],
@@ -48,9 +50,9 @@ class MenuController extends Controller
                 "name" => "伴我同行",
                 "sub_button" => [
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "校内电话",
-                        "key"  => "B1_TEL"
+                        "url"  => config('wechat.url.prefix') . urlencode(route('netTel')) . config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "click",
@@ -63,14 +65,14 @@ class MenuController extends Controller
                         "key" => config('wechat.button.network'),
                     ],
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "校园地图",
-                        "key" => "B1_MAP"
+                        "url" => "https://ww1.sinaimg.cn/large/006tNc79gy1ffe5joyusxg31kw1a9n70.gif"
                     ],
                     [
-                        "type" => "click",
+                        "type" => "view",
                         "name" => "学年校历",
-                        "key" => "B1_CALENDAR"
+                        "url" => "http://api.wx.dlpu.edu.cn/xiaoli"
                     ],
                 ]
             ],
@@ -90,23 +92,8 @@ class MenuController extends Controller
                     [
                         "type" => "click",
                         "name" => "大连天气",
-                        "key" => "B2_WEATHER"
+                        "key" => config('wechat.button.weather')
                     ],
-                    [
-                        "type" => "click",
-                        "name" => "杭州天气",
-                        "key" => "B2_WEATHER_HZ"
-                    ],
-                    [
-                        "type" => "click",
-                        "name" => "反馈建议",
-                        "key" => config('wechat.button.feedback'),
-                    ],
-                    [
-                        "type" => "click",
-                        "name" => "关于",
-                        "key" => config('wechat.button.about'),
-                    ]
                 ]
             ],
         ];

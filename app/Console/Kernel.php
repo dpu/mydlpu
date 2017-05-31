@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Services\Express\ExpressService;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\ExpressTracking::class,
+        \App\Console\Commands\EduNewsListUpdate::class,
+        \App\Console\Commands\EduTimetableUpdate::class,
     ];
 
     /**
@@ -25,11 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            $modelExpress = \App\Models\Express::where('state', '!=', 3)->orderBy('created_at')->get();
-            foreach ($modelExpress as $model) {
-                (new ExpressService)->doSchedule($model->id, $model->time, $model->openid, $model->nu, $model->com, $model->note);
-            }
-        })->name('express')->everyTenMinutes();
+        $schedule->command('express:tracking')->name('express')->withoutOverlapping()->everyTenMinutes()->appendOutputTo(storage_path('logs/schedule_express.log'));
+
+        $schedule->command('edu:news')->name('news')->withoutOverlapping()->everyThirtyMinutes()->appendOutputTo(storage_path('logs/schedule_edu_news.log'));
+
+        $schedule->command('edu:timetable')->name('timetable')->withoutOverlapping()->cron('5 5 * * 1')->appendOutputTo(storage_path('logs/schedule_edu_timetable.log'));
     }
 }

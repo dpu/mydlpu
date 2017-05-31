@@ -8,6 +8,7 @@ class MessageController extends Controller
 {
     public static function handle($message, $app)
     {
+        dispatch((new \App\Jobs\SaveWxUserInfoJob($message->FromUserName))->onQueue('wxUserInfo'));
         switch ($message->MsgType) {
             case 'event':
                 return MessageEventController::handle($message, $app);
