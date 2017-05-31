@@ -111,4 +111,26 @@ class MessageNewsService extends Service
 
         return $news;
     }
+
+    public function weather($data)
+    {
+        $data = $data['result']['data'];
+
+        $news = [];
+
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '天气',
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '实时 ' . $data['realtime']['weather']['temperature'] . '°C  ' . $data['realtime']['weather']['info'] . '  ' . $data['realtime']['wind']['direct'] . $data['realtime']['wind']['power'],
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '明天 ' . $data['weather'][1]['info']['night'][2] . '~' . $data['weather'][1]['info']['day'][2] . '°C  ' . $data['weather'][1]['info']['dawn'][1] . '  ' . $data['weather'][1]['info']['dawn'][3] . $data['weather'][1]['info']['dawn'][4],
+        ]);
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '后天 ' . $data['weather'][2]['info']['night'][2] . '~' . $data['weather'][2]['info']['day'][2] . '°C  ' . $data['weather'][2]['info']['dawn'][1] . '  ' . $data['weather'][2]['info']['dawn'][3] . $data['weather'][2]['info']['dawn'][4],
+        ]);
+
+        return $news;
+    }
 }

@@ -7,6 +7,7 @@ use App\Services\Edu\EduService;
 use App\Services\Edu\NewsListService;
 use App\Services\LogService;
 use App\Services\NetWork\NetworkService;
+use App\Services\Weather\WeatherService;
 use App\Services\Wechat\MessageNewsService;
 use App\Services\Wechat\MessageTextService;
 use Cn\Xu42\DlpuEcard\Exception\SystemException;
@@ -34,6 +35,9 @@ class MessageEventClickController extends Controller
                 break;
             case config('wechat.button.network'):
                 return $this->network($message, $app);
+                break;
+            case config('wechat.button.weather'):
+                return $this->weather($message, $app);
                 break;
             default :
                 return 'ing';
@@ -147,6 +151,17 @@ class MessageEventClickController extends Controller
             LogService::edu('network error...', [$openid, $t->getMessage(), $t->getTrace()]);
             $news = MessageTextService::simple($t->getMessage());
         }
+
+        $app->staff->message($news)->to($openid)->send();
+    }
+
+    private function weather($message, $app)
+    {
+        $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
+        $weatherService = new WeatherService();
+
+        $news = (new MessageNewsService)->weather($weatherService->get('大连'));
 
         $app->staff->message($news)->to($openid)->send();
     }

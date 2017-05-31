@@ -92,23 +92,8 @@ class MenuController extends Controller
                     [
                         "type" => "click",
                         "name" => "大连天气",
-                        "key" => "B2_WEATHER"
+                        "key" => config('wechat.button.weather')
                     ],
-                    [
-                        "type" => "click",
-                        "name" => "杭州天气",
-                        "key" => "B2_WEATHER_HZ"
-                    ],
-                    [
-                        "type" => "click",
-                        "name" => "反馈建议",
-                        "key" => config('wechat.button.feedback'),
-                    ],
-                    [
-                        "type" => "click",
-                        "name" => "关于",
-                        "key" => config('wechat.button.about'),
-                    ]
                 ]
             ],
         ];
