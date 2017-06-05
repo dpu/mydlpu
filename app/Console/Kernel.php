@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ExpressTracking::class,
         \App\Console\Commands\EduNewsListUpdate::class,
         \App\Console\Commands\EduTimetableUpdate::class,
+        \App\Console\Commands\BatchUpdateWechatUserInfo::class,
     ];
 
     /**
@@ -31,5 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('edu:news')->name('news')->withoutOverlapping()->everyThirtyMinutes()->appendOutputTo(storage_path('logs/schedule_edu_news.log'));
 
         $schedule->command('edu:timetable')->name('timetable')->withoutOverlapping()->cron('5 5 * * 1')->appendOutputTo(storage_path('logs/schedule_edu_timetable.log'));
+
+        $schedule->command('batch:wechat')->name('userinfo')->withoutOverlapping()->cron('5 5 1 * *')->appendOutputTo(storage_path('logs/schedule_batch_wechat.log'));
     }
 }
