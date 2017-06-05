@@ -15,7 +15,7 @@ class MenuController extends Controller
 
         $buttons = [
             [
-                "name" => "哆啦A梦",
+                "name" => "教务",
                 "sub_button" => [
                     [
                         "type" => "click",
@@ -47,13 +47,8 @@ class MenuController extends Controller
                 ]
             ],
             [
-                "name" => "伴我同行",
+                "name" => "网络",
                 "sub_button" => [
-                    [
-                        "type" => "view",
-                        "name" => "校内电话",
-                        "url"  => config('wechat.url.prefix') . urlencode(route('netTel')) . config('wechat.url.suffix_base'),
-                    ],
                     [
                         "type" => "click",
                         "name" => "一卡通",
@@ -63,6 +58,11 @@ class MenuController extends Controller
                         "type" => "click",
                         "name" => "网络自助",
                         "key" => config('wechat.button.network'),
+                    ],
+                    [
+                        "type" => "view",
+                        "name" => "校内电话",
+                        "url"  => config('wechat.url.prefix') . urlencode(route('netTel')) . config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "view",
@@ -77,7 +77,7 @@ class MenuController extends Controller
                 ]
             ],
             [
-                "name" => "神奇口袋",
+                "name" => "生活",
                 "sub_button" => [
 //                    [
 //                        "type" => "scancode_waitmsg",
