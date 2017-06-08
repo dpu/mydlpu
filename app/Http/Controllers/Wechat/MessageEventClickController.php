@@ -39,6 +39,9 @@ class MessageEventClickController extends Controller
             case config('wechat.button.weather'):
                 return $this->weather($message, $app);
                 break;
+            case config('wechat.button.exams'):
+                return $this->exams($message, $app);
+                break;
             default :
                 return 'ing';
                 break;
@@ -166,4 +169,27 @@ class MessageEventClickController extends Controller
         $app->staff->message($news)->to($openid)->send();
     }
 
+    private function exams($message, $app)
+    {
+        $openid = $message->FromUserName;
+        $app->staff->message(MessageTextService::ing())->to($openid)->send();
+        $eduService = new EduService();
+        try {
+            $modelUser = $eduService->rowByOpenid($openid);
+            if(is_null($modelUser)) throw new ArgumentException();
+            $semester = config('edu.semester');
+            $token = $eduService->getToken($modelUser->username, $modelUser->password);
+            $examsInfo = $eduService->getExamsInfo($token, $semester);
+            $news = (new MessageNewsService)->examsInfo($examsInfo);
+        } catch (ArgumentException $argumentException) {
+            $news = MessageTextService::bindingEdu();
+        } catch (LoginException $loginException) {
+            $news = MessageTextService::bindingEdu();
+        } catch (\Throwable $t) {
+            LogService::edu('Edu examInfo error...', [$openid, $t->getMessage(), $t->getTrace()]);
+            $news = MessageTextService::simple($t->getMessage());
+        }
+
+        $app->staff->message($news)->to($openid)->send();
+    }
 }

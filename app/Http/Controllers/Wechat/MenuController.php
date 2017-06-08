@@ -33,9 +33,9 @@ class MenuController extends Controller
                         "key" => config('wechat.button.score_level'),
                     ],
                     [
-                        "type" => "view",
-                        "name" => "四级成绩",
-                        "url" => config('wechat.url.prefix') . urlencode(route('cet')) . config('wechat.url.suffix_base'),
+                        "type" => "click",
+                        "name" => "考试安排",
+                        "key" => config('wechat.button.exams'),
                     ],
                     [
                         "type" => "miniprogram",
@@ -61,13 +61,13 @@ class MenuController extends Controller
                     ],
                     [
                         "type" => "view",
-                        "name" => "校内电话",
-                        "url"  => config('wechat.url.prefix') . urlencode(route('netTel')) . config('wechat.url.suffix_base'),
+                        "name" => "四级成绩",
+                        "url" => config('wechat.url.prefix') . urlencode(route('cet')) . config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "view",
-                        "name" => "校园地图",
-                        "url" => "https://ww1.sinaimg.cn/large/006tNc79gy1ffe5joyusxg31kw1a9n70.gif"
+                        "name" => "校内电话",
+                        "url"  => config('wechat.url.prefix') . urlencode(route('netTel')) . config('wechat.url.suffix_base'),
                     ],
                     [
                         "type" => "view",
@@ -79,11 +79,6 @@ class MenuController extends Controller
             [
                 "name" => "生活",
                 "sub_button" => [
-//                    [
-//                        "type" => "scancode_waitmsg",
-//                        "name" => "扫一扫",
-//                        "key"  => "B2_SCAN"
-//                    ],
                     [
                         "type" => "view",
                         "name" => "快递追踪",
@@ -93,6 +88,11 @@ class MenuController extends Controller
                         "type" => "click",
                         "name" => "大连天气",
                         "key" => config('wechat.button.weather')
+                    ],
+                    [
+                        "type" => "view",
+                        "name" => "校园地图",
+                        "url" => "https://ww1.sinaimg.cn/large/006tNc79gy1ffe5joyusxg31kw1a9n70.gif"
                     ],
                     [
                         "type" => "view",
