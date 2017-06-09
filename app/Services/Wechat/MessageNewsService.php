@@ -133,4 +133,30 @@ class MessageNewsService extends Service
 
         return $news;
     }
+
+
+    public function examsInfo($examsInfo)
+    {
+        $news[] = new \EasyWeChat\Message\News([
+            'title' => '教务处 » 考试安排'
+        ]);
+
+        if (!is_array($examsInfo) || count($examsInfo) === 1) {
+            $news[] = new \EasyWeChat\Message\News([
+                'title' => "哎呀～好像没有考试呀"
+            ]);
+            return $news;
+        }
+
+        array_shift($examsInfo);
+
+        foreach ($examsInfo as $value) {
+            $news[] = new \EasyWeChat\Message\News([
+                "title" => $value[3] . "\t" . $value[5] . "\n" . $value[4]
+            ]);
+        }
+
+        return $news;
+    }
+
 }

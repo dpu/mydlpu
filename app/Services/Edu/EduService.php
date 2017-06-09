@@ -71,6 +71,12 @@ class EduService
     {
         return (new EducationService)->getLevelScores($token);
     }
+
+    public function getExamsInfo($token, $semester)
+    {
+        return (new EducationService)->getExamInfo($token, $semester);
+    }
+
     private function recordToDB($openid, $username, $password, $mobile)
     {
         $this->removeFromDB($openid);
